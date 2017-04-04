@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tensorflow on Yingxi Yu</title>
+    <link>/tags/tensorflow/index.xml</link>
+    <description>Recent content in Tensorflow on Yingxi Yu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy;2017 Yingxi Yu, credit to vincentz</copyright>
+    <atom:link href="/tags/tensorflow/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>TensorFlow Self-Learning Note 1</title>
+      <link>/blog/tensorflow/tensorflowone/</link>
+      <pubDate>Fri, 31 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/tensorflow/tensorflowone/</guid>
+      <description>&lt;p&gt;What is the best deep learning framework? There is no answer to this question but I am sure that TensorFlow is one of the most competitive candidates. Come and learn tensorflow from the very begining with me!&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#introduction&#34;&gt;Introduction&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#what-is-a-data-flow-graph&#34;&gt;What is a Data Flow Graph&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#features-of-tensorFlow&#34;&gt;Features of TensorFlow&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#basis&#34;&gt;Basis&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#graph-computing&#34;&gt;Graph Computing&lt;/a&gt;&lt;br /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#create-a-graph&#34;&gt;Create a Graph&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#run-a-session&#34;&gt;Run a Session&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#working-in-interactive-environment&#34;&gt;Working in Interactive Environment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#variables&#34;&gt;Variables&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#fetches&#34;&gt;Fetches&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#feeds&#34;&gt;Feeds&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#example-of-linear-regression&#34;&gt;Example of Linear Regression&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#mnist-handwritten-digits-recognition&#34;&gt;MNIST Handwritten Digits Recognition&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#model-training&#34;&gt;Model Training&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#model-evaluation&#34;&gt;Model Evaluation&lt;/a&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/tensorflow/tensorflow&#34;&gt;TensorFlow&lt;/a&gt; is an open source software library for numerical computation using data flow graphs. Nodes in the graph represent mathematical operations, while the graph edges represent the multidimensional data arrays (tensors) that flow between them. This flexible architecture lets you deploy computation to one or more CPUs or GPUs in a desktop, server, or mobile device without rewriting code. TensorFlow also includes TensorBoard, a data visualization toolkit.&lt;/p&gt;
+
+&lt;p&gt;TensorFlow was originally developed by researchers and engineers working on the Google Brain team within Google&amp;rsquo;s Machine Intelligence research organization for the purposes of conducting machine learning and deep neural networks research. The system is general enough to be applicable in a wide variety of other domains, as well.(cited from github)&lt;/p&gt;
+
+&lt;h3 id=&#34;what-is-a-data-flow-graph&#34;&gt;What is a Data Flow Graph&lt;/h3&gt;
+
+&lt;p&gt;A data-flow graph (DFG) is a graph which represents a data dependancies between a number of operations. The nodes in the graph represent operations and edges connect nodes together by passing tensors. To conclude, tensors flowing in the DFG is TensorFlow.&lt;/p&gt;
+
+&lt;h3 id=&#34;features-of-tensorflow&#34;&gt;Features of TensorFlow&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Flexibility&lt;/p&gt;
+
+&lt;p&gt;TensorFlow is not only a neural network framwork. You can do whatever you want with the power of TensorFlow if you are able to make the calculations in a data flow graph&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Portability&lt;/p&gt;
+
+&lt;p&gt;TensorFlow is able to work on any devices with CPU or GPU. You can focus on your idea without concerning about hardware environment&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Program Language Support&lt;/p&gt;
+
+&lt;p&gt;TensorFlow currently support Python and C++&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Efficiency&lt;/p&gt;
+
+&lt;p&gt;TensorFlow makes full use of hardware resources and maximizes computing performance&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;basis&#34;&gt;Basis&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Make all calculations as data flow graph&lt;/li&gt;
+&lt;li&gt;Work with the graph by running a &lt;strong&gt;Session&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Present data as &lt;strong&gt;tensors&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Use &lt;strong&gt;Variables&lt;/strong&gt; to keep information of status&lt;/li&gt;
+&lt;li&gt;Fill in data and obtain the result of any operations with &lt;strong&gt;feeds&lt;/strong&gt; and &lt;strong&gt;fetches&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Each node in the graph is called an &lt;strong&gt;op&lt;/strong&gt;(short for operation). An ops uses 0 or more &lt;strong&gt;tensors&lt;/strong&gt; and generates 0 or more &lt;strong&gt;tensors&lt;/strong&gt; with some calculations. A &lt;strong&gt;tensor&lt;/strong&gt; is a multi-dimensional array. You can take a graph as a 4 dimensional array [batch, height, witdth, channels] where all elements in the array are floats.&lt;/p&gt;
+
+&lt;p&gt;Session puts all ops in the graph to CPUs or GPUs, then execute them with methods and return tensors finally. Tensor in Python is a numpy ndarray objects while in C++ is tensorflow::Tensor&lt;/p&gt;
+
+&lt;h3 id=&#34;graph-computing&#34;&gt;Graph Computing&lt;/h3&gt;
+
+&lt;p&gt;You can take creating a graph as construct a neural network while executing the session as training the network.&lt;/p&gt;
+
+&lt;h4 id=&#34;create-a-graph&#34;&gt;Create a Graph&lt;/h4&gt;
+
+&lt;p&gt;In TensorFlow, &lt;strong&gt;Constant&lt;/strong&gt; is a kind of &lt;strong&gt;op&lt;/strong&gt; without any input but you can make it a as a input of other ops. TensorFlow module in Python has a default graph so that you can directly generate ops on it. More details about &lt;a href=&#34;https://www.tensorflow.org/api_guides/python/framework#Graph&#34;&gt;Graph Class&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import tensorflow as tf
+import numpy as np
+from PIL import Image
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Create a Constant op that produces a 1x2 matrix.  The op is
+# added as a node to the default graph.
+#
+# The value returned by the constructor represents the output
+# of the Constant op.
+matrix1 = tf.constant([[3., 3.]])
+
+# Create another Constant that produces a 2x1 matrix.
+matrix2 = tf.constant([[2.],[2.]])
+
+# Create a Matmul op that takes &#39;matrix1&#39; and &#39;matrix2&#39; as inputs.
+# The returned value, &#39;product&#39;, represents the result of the matrix
+# multiplication.
+product = tf.matmul(matrix1, matrix2)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now there are 3 ops in the default graph: 2 &lt;strong&gt;Constant( ) ops&lt;/strong&gt; and 1 &lt;strong&gt;matmul( ) op&lt;/strong&gt;. In order to get the result of the matrices multiplication, we need a session the run the computings.&lt;/p&gt;
+
+&lt;h4 id=&#34;run-a-session&#34;&gt;Run a Session&lt;/h4&gt;
+
+&lt;p&gt;Find more details at &lt;a href=&#34;https://www.tensorflow.org/api_guides/python/client#session-management&#34;&gt;Session Class&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Launch the default graph.
+sess = tf.Session()
+
+# To run the matmul op we call the session &#39;run()&#39; method, passing &#39;product&#39;
+# which represents the output of the matmul op.  This indicates to the call
+# that we want to get the output of the matmul op back.
+#
+# All inputs needed by the op are run automatically by the session.  They
+# typically are run in parallel.
+#
+# The call &#39;run(product)&#39; thus causes the execution of threes ops in the
+# graph: the two constants and matmul.
+#
+# The output of the op is returned in &#39;result&#39; as a numpy `ndarray` object.
+result = sess.run(product)
+print(result)
+
+# Close the Session when we&#39;re done.
+sess.close()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;[[ 12.]]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Do not forget to close the session in the end. However, you may want to use &lt;strong&gt;with&lt;/strong&gt; to avoid the close&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;with tf.Session() as sess:
+  result = sess.run([product])
+  print(result)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;[array([[ 12.]], dtype=float32)]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The computings are all on CPUs and GPUs. TensorFlow will use the first GPU by default if you are using GPU for executing. If you would like to work on other GPUs:
+with tf.Session() as sess:
+  with tf.device(&amp;ldquo;/gpu:1&amp;rdquo;):
+    matrix1 = tf.constant([[3., 3.]])
+    matrix2 = tf.constant([[2.],[2.]])
+    product = tf.matmul(matrix1, matrix2)
+    &amp;hellip;
+Names for Devices:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&amp;rdquo;/cpu:0&amp;rdquo;： Your CPU&lt;/li&gt;
+&lt;li&gt;&amp;rdquo;/gpu:0&amp;rdquo;： Your first GPU&lt;/li&gt;
+&lt;li&gt;&amp;rdquo;/gpu:1&amp;rdquo;： Your second GPU&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Documentation of &lt;a href=&#34;https://www.tensorflow.org/tutorials/using_gpu&#34;&gt;GPU&lt;/a&gt; using&lt;/p&gt;
+
+&lt;h3 id=&#34;working-in-interactive-environment&#34;&gt;Working in Interactive Environment&lt;/h3&gt;
+
+&lt;p&gt;We were using Session and Session.run() to execute the graph computing. However, you can use InteractiveSession class and methods like Tensor.eval(), Operation.run() in interactive environments such IPython and Jupyter Notebook.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Enter an interactive TensorFlow Session.
+sess = tf.InteractiveSession()
+
+x = tf.Variable([1.0, 2.0])
+a = tf.constant([3.0, 3.0])
+
+# Initialize &#39;x&#39; using the run() method of its initializer op.
+x.initializer.run()
+
+# Add an op to subtract &#39;a&#39; from &#39;x&#39;.  Run it and print the result
+sub = tf.sub(x, a)
+print(sub.eval())
+
+# Close the Session when we&#39;re done.
+sess.close()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;[-2. -1.]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;variables&#34;&gt;Variables&lt;/h3&gt;
+
+&lt;p&gt;Variables will keep their information of status while running a session. They are usually used to represent parameters which are need to be trained with iterations in an algorithm since they can memorize the status of each iteration. The variable in the following example take the role as a simple counter.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Create a Variable, that will be initialized to the scalar value 0.
+state = tf.Variable(0, name=&amp;quot;counter&amp;quot;)
+
+# Create an Op to add one to `state`.
+
+one = tf.constant(1)
+new_value = tf.add(state, one)
+update = tf.assign(state, new_value)
+
+# Variables must be initialized by running an `init` Op after having 
+# launched the graph.  We first have to add the `init` Op to the graph.
+init_op = tf.global_variables_initializer()
+
+# Launch the graph and run the ops.
+with tf.Session() as sess:
+    # run the init op
+    sess.run(init_op)
+    # Print the initial value of &#39;state&#39;
+    print(sess.run(state))
+    # Run the op that updates &#39;state&#39; and print &#39;state&#39;.
+    for i in range(3):
+        sess.run(update)
+        print(sess.run(state))
+    
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;0
+1
+2
+3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;fetches&#34;&gt;Fetches&lt;/h3&gt;
+
+&lt;p&gt;To fetch the result of an op, you can &lt;strong&gt;print&lt;/strong&gt; the status after executing &lt;strong&gt;sess.run()&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;input1 = tf.constant(3.0)
+input2 = tf.constant(2.0)
+input3 = tf.constant(5.0)
+intermd = tf.add(input3, input2)
+mul = tf.mul(input1, intermd)
+
+with tf.Session() as sess:
+    result = sess.run([mul, intermd])
+    print(result)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;[21.0, 7.0]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;feeds&#34;&gt;Feeds&lt;/h3&gt;
+
+&lt;p&gt;First create a placeholder, then feed it with data&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;input1 = tf.placeholder(tf.float32)
+input2 = tf.placeholder(tf.float32)
+output = tf.mul(input1, input2)
+
+with tf.Session() as sess:
+  print(sess.run([output], feed_dict={input1:[7.], input2:[2.]}))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;[array([ 14.], dtype=float32)]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not feeding a placehold will throw out errors.&lt;/p&gt;
+
+&lt;h2 id=&#34;example-of-linear-regression&#34;&gt;Example of Linear Regression&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Randomly generate 100 pairs of (x, y) where y = x * 0.1 + 0.3
+x_data = np.random.rand(100).astype(&amp;quot;float32&amp;quot;)
+y_data = x_data * 0.1 + 0.3
+
+# Initialize w and b with variables
+W = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
+b = tf.Variable(tf.zeros([1]))
+y = W * x_data + b    # here + and * has been overloaded for tf.add() and tf.mul()
+
+# Least Square Error
+loss = tf.reduce_mean(tf.square(y - y_data))
+optimizer = tf.train.GradientDescentOptimizer(0.5)
+train = optimizer.minimize(loss)
+
+# Initialize the variables in tensorflow
+init = tf.global_variables_initializer()
+
+# Run the session
+with tf.Session() as sess:
+    sess.run(init)
+    # monitor the changes of coefficients every 20 iterations
+    for step in range(201):
+        sess.run(train)
+        if step % 20 == 0:
+            print(step, sess.run(W), sess.run(b))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;0 [-0.21695098] [ 0.66673416]
+20 [-0.00646714] [ 0.35819602]
+40 [ 0.07154677] [ 0.31555283]
+60 [ 0.09239592] [ 0.30415648]
+80 [ 0.09796781] [ 0.30111083]
+100 [ 0.09945691] [ 0.30029687]
+120 [ 0.09985484] [ 0.30007935]
+140 [ 0.09996121] [ 0.3000212]
+160 [ 0.09998964] [ 0.30000567]
+180 [ 0.09999724] [ 0.30000153]
+200 [ 0.09999929] [ 0.3000004]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;mnist-handwritten-digits-recognition&#34;&gt;MNIST Handwritten Digits Recognition&lt;/h2&gt;
+
+&lt;p&gt;MNIST is a dataset of simple handwritten digits. You can get access to the data &lt;a href=&#34;http://yann.lecun.com/exdb/mnist/&#34;&gt;here&lt;/a&gt;. There are 55,000 observations in training set and 10,000 in test set. Each 28x28 picture is flatten to an array of length 784 and the response is from 0 to 9. However, MNIST is the sample data set of tensorFlow in Python. It is quite easy to get the data by two lines of code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from tensorflow.examples.tutorials.mnist import input_data
+mnist = input_data.read_data_sets(&amp;quot;MNIST_data/&amp;quot;, one_hot=True)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Extracting MNIST_data/train-images-idx3-ubyte.gz
+Extracting MNIST_data/train-labels-idx1-ubyte.gz
+Extracting MNIST_data/t10k-images-idx3-ubyte.gz
+Extracting MNIST_data/t10k-labels-idx1-ubyte.gz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;try_x,try_y =mnist.train.next_batch(1)
+Image.fromarray(np.uint8(try_x.reshape(28,28)*255)).resize((300,300),Image.ANTIALIAS)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../blog/tensorflow/output_30_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Since this is only an entry level multiclass classification, I will not discuss the details about the algorithm here but focus on the implementation with TensorFlow.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;x = tf.placeholder(tf.float32, [None, 784])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here x is about a specific number but a placeholder. We use [None, 784] to represent the whole MNIST data set where None could be anything.&lt;/p&gt;
+
+&lt;p&gt;We use variables to represent weights and bias which are changeable&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;W = tf.Variable(tf.zeros([784, 10]))
+b = tf.Variable(tf.zeros([10]))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;W and b are initialized with 0. W is 784x10 since the response is one hot vector and the bias has length 10.&lt;/p&gt;
+
+&lt;p&gt;Implement &lt;strong&gt;softmax regression&lt;/strong&gt; only needs one line of code&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;y = tf.nn.softmax(tf.matmul(x, W) + b)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;model-training&#34;&gt;Model Training&lt;/h3&gt;
+
+&lt;p&gt;Loss function is one of the essential parts of a machine learning algorithm and it indicates the goodness of training. Here we use cross-entropy as our loss function. Cross-entropy comes from information theory but not is applied in many other fields. Its defination is:
+$$H_y^\prime(y)=-\sum_iy_i^\prime\log(y_i)$$ where y is the predicted probability and \(y^\prime\) is the true values. You can find more detials about cross-entropy &lt;a href=&#34;http://colah.github.io/posts/2015-09-Visual-Information/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In order to implement cross-entropy, we set a placeholder to store the true responses.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;y_ = tf.placeholder(tf.float32, [None, 10])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then define the cross-entropy. This is not restricted to only one picture. It can be the whole data set.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+#cross_entropy = -tf.reduce_sum(y_ * tf.log(y))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;TensorFlow automatically uses back propagation to modify the parameters for the purpose of minizing the loss. The last thing you need to set is choosing a algorithm for minizing the loss. Here we select gradient descent. TensorFlow also offers other &lt;a href=&#34;https://www.tensorflow.org/api_guides/python/train#Optimizers&#34;&gt;optimization methods&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Initialize the variables before training
+init = tf.global_variables_initializer()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;model-evaluation&#34;&gt;Model Evaluation&lt;/h4&gt;
+
+&lt;p&gt;We use &lt;strong&gt;tf.argmax()&lt;/strong&gt; to predict the label and &lt;strong&gt;tf.equal()&lt;/strong&gt; to find whether the predictions matche the true labels. correct_prediction is a list of boolean values. For example [True, False, True, True]. One can use &lt;strong&gt;tf.cast()&lt;/strong&gt; to convert it into [1, 0, 1, 1] and the accuracy is 0.75&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Start a session
+sess = tf.Session()
+# Initialize the variables
+sess.run(init) 
+# Train the model with 1000 as the maximum iterations
+for i in range(1000):
+    batch_xs, batch_ys = mnist.train.next_batch(10)
+    sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
+
+# Model Evaluation.
+correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+print(&amp;quot;Accuarcy on Test-dataset: &amp;quot;, sess.run(accuracy, \
+                    feed_dict={x: mnist.test.images, y_: mnist.test.labels}))
+
+sess.close()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Accuarcy on Test-dataset:  0.8688
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Softmax regression is too simple to get an ideal result. Here our result is around 0.88 while it can reach 0.97 by some simple optimization. Nowadays, the best accuracy is 99.7%.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

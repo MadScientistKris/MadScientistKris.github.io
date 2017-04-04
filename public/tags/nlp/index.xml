@@ -1,0 +1,1445 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nlp on Yingxi Yu</title>
+    <link>/tags/nlp/index.xml</link>
+    <description>Recent content in Nlp on Yingxi Yu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy;2017 Yingxi Yu, credit to vincentz</copyright>
+    <atom:link href="/tags/nlp/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Sentiment Analysis on Twitter</title>
+      <link>/projects/sentiment/sentiment/</link>
+      <pubDate>Fri, 10 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/sentiment/sentiment/</guid>
+      <description>&lt;p&gt;What is people&amp;rsquo;s attitude towards special topics in each piece of tweet? positive, neutral or negtive?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#abstract&#34;&gt;Abstract&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#introduction&#34;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#material&#34;&gt;Material&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#data-source&#34;&gt;Data Source&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#challenges&#34;&gt;Challenges&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#methodologies&#34;&gt;Methodologies&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#preprocessing&#34;&gt;Preprocessing&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#emoticons&#34;&gt;Emoticons&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#hashtags&#34;&gt;Hashtags&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#handles&#34;&gt;Handles&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#urls&#34;&gt;URLs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#elongated-words&#34;&gt;Elongated Words&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#negation&#34;&gt;Negation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#stop-words&#34;&gt;Stop Words&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#stem&#34;&gt;Stem&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#bag-of-words-model&#34;&gt;Bag-of-Words Model&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#tf-idf-transformation&#34;&gt;Tf-idf Transformation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#annotation&#34;&gt;Annotation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#machine-learning-models&#34;&gt;Machine Learning Models&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#naive-bayes&#34;&gt;Naive Bayes&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#logistic-regression&#34;&gt;Logistic Regression&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#svm&#34;&gt;SVM&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#result&#34;&gt;Result&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#summary-and-future&#34;&gt;Summary and Future&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#a-small-sample-of-code&#34;&gt;A Small Sample of Code&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;abstract&#34;&gt;Abstract&lt;/h2&gt;
+
+&lt;p&gt;We perform sentimental analysis (classification) on 400000 tweets from twitter. Our baseline model is multinomial naive bayes classifier. Then we try to improve the classifier not only by introducing algorithms with higher performance on large scale datasets such as logistic regression and support vector machine but also on linguistic level like n-gram, emoji analysis and annotation.&lt;/p&gt;
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Sentiment analysis, also called opinion mining, is the process of using the technique of natural language processing, text analysis, computational linguistics to determine the emotional tone or the attitude that a writer or a speaker express towards some entity. As millions of text are generated on the Internet everyday, the application of sentiment analysis becomes more powerful and broad. For example, social media monitoring allows us to gain an overview of the wider public opinion behind certain topics, and the sentiment analysis for customers review delivers the satisfaction metric to the company, which makes it possible for them to improve their products and service. It also has been applied widely in the field of market where it can be applied to forecast market movement based on news, blogs and social media sentiment. In our project, we combine the technique of text analysis and machine learning to perform sentiment classification on the twitter sentiment corpus.&lt;/p&gt;
+
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+
+&lt;h3 id=&#34;data-source&#34;&gt;Data Source&lt;/h3&gt;
+
+&lt;p&gt;We choose &lt;a href=&#34;http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/&#34;&gt;Twitter Sentiment Analysis Dataset&lt;/a&gt; as our training and test data where the data sources are University of Michigan Sentiment Analysis competition on Kaggle and Twitter Sentiment Corpus by Niek Sanders. The reason why we use this dataset is that it contains 1,578,627 classified tweets from sentimental annotation which is huge enough for model building and hyperparameter tuning. Ibrahim Naji who is the author of the blog where we got the data has tried simple Naive Bayesian classification algorithm and the result were 75% which is a good baseline for us to compare and improve.&lt;/p&gt;
+
+&lt;h3 id=&#34;challenges&#34;&gt;Challenges&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Tweets are always unstructured&lt;/li&gt;
+&lt;li&gt;None vocabulary word such as emoji and emoticon.&lt;/li&gt;
+&lt;li&gt;Lexical variation such as tmrw representing tomorrow,&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;methodologies&#34;&gt;Methodologies&lt;/h2&gt;
+
+&lt;p&gt;As we all know, tweet has 140-character count limitations so they are different from those documentations that have no length limits. On top of that, unlike the usual text documentation, the tweet message has its own unique features, such as the prevalent usage of emoticons and elongated words (eg. goooood), which distinguishes itself from other text genres.  Hence it is important to standardize the text and remove noise information through some pre-processing steps.&lt;/p&gt;
+
+&lt;h3 id=&#34;preprocessing&#34;&gt;Preprocessing&lt;/h3&gt;
+
+&lt;h4 id=&#34;emoticons&#34;&gt;Emoticons&lt;/h4&gt;
+
+&lt;p&gt;Emoticons are used broadly throughout the Internet. However, the default setting of tokenization of nltk will treat each individual punctuation to be a token and therefore decompose the emoticons. So the first step is to identify the emoticons in each text and transform them to a single word. However this uniform transformation for each emoticon has such disadvantage that it ignores the ambiguity of emoticons. For example, the smiley face &amp;ldquo;:)&amp;rdquo; can have multiple meanings, either expressing happiness or just used by people to soften the tone. But this is the best solution we have come up with so far therefore we accept this consequence of ambiguity.&lt;/p&gt;
+
+&lt;h4 id=&#34;hashtags&#34;&gt;Hashtags&lt;/h4&gt;
+
+&lt;p&gt;A hashtag is a word or an un-spaced phrase prefixed with the hash symbol (#), which is used to indicate the topics. It is uncertain whether or not the hashtags contain sentiment information and it is also difficult to tokenize since often times phrase in a hashtag is un-spaced. Thus, we decide to uniformly replace every hashtag by a pattern &amp;ldquo;HASH_(whatever in the hashtag)&amp;rdquo;&lt;/p&gt;
+
+&lt;h4 id=&#34;handles&#34;&gt;Handles&lt;/h4&gt;
+
+&lt;p&gt;Handles are used to direct the twitter towards other users by writing their usernames preceded by ‘@’. No transformation is needed since usernames can be directly seperated by &amp;ldquo;@&amp;rdquo; and treated as proper nouns.&lt;/p&gt;
+
+&lt;h4 id=&#34;urls&#34;&gt;URLs&lt;/h4&gt;
+
+&lt;p&gt;Links are very common in the twitters for sharing assorted resources. Each link is replaced by a word &amp;ldquo;URL&amp;rdquo; and treated as a proper noun.&lt;/p&gt;
+
+&lt;h4 id=&#34;elongated-words&#34;&gt;Elongated Words&lt;/h4&gt;
+
+&lt;p&gt;People tend to use repeating characters in colloquial language, which delivers certain sentiment. But the problem is that some elongated words might derive from the same word but have different numbers of repeating characters. Therefore, we used regular expression to replace characters repeating more than twice as two characters.&lt;/p&gt;
+
+&lt;h4 id=&#34;negation&#34;&gt;Negation&lt;/h4&gt;
+
+&lt;p&gt;The occurrence of negation can completely change the sentiment of the whole sentence. There are several ways to handle negation, one of which is to suffix &amp;ldquo;_NEG&amp;rdquo; to all the words that appear after the negation words until the punctuation. In addition, we also learned that negation handling is way more complicated than that and people have done some research regrading detection of explicit negation cues and the scope of negation of these words. However, our analysis showed that &amp;ldquo;_NEG&amp;rdquo; appending can only improve the prediction accuracy by 0.5% compared to the unigram baseline model. Moreover, later experiment indicates that the combination of unigram, bigram and trigram can significantly improve the prediction performance and we assume that such N-gram model can capture the negation characteristics. Computational capabilities are also important and we discovered such modification requires changes for some default behavior of tokenizer (we use scikit-learn in python) and notably slowed down the computation. So we decided not to handle the negations.&lt;/p&gt;
+
+&lt;h3 id=&#34;stop-words&#34;&gt;Stop Words&lt;/h3&gt;
+
+&lt;p&gt;Stop words usually refer to the most common words in a language, such as &amp;ldquo;a&amp;rdquo;, &amp;ldquo;the&amp;rdquo; and &amp;ldquo;is&amp;rdquo; in English. Removing stop words are a common step in text processing. However, it has been demonstrated in recent years that the removal of stop words is not a necessary step and may have undesirable effect on the classifier. In fact, our preliminary experiment deprecated such action as the testing accuracy decreased by 2%.&lt;/p&gt;
+
+&lt;h3 id=&#34;stem&#34;&gt;Stem&lt;/h3&gt;
+
+&lt;p&gt;In linguistics, a stem is a part of a word. Different words can be derivative of the same stem. For example, the word &amp;ldquo;interest&amp;rdquo; is the stem of both &amp;ldquo;interesting&amp;rdquo; and &amp;ldquo;interested&amp;rdquo;.
+Consequently, stemming refers to the procedure of replace every word by its stem. However, our considerations is that tweets are very short so we choose not to perform stemming since we want to reserve as many features as possible. Nevertheless, we do think it is a necessary step to do in the case of long documents in order to reduce the features and improve classification performance.&lt;/p&gt;
+
+&lt;h3 id=&#34;bag-of-words-model&#34;&gt;Bag of Words Model&lt;/h3&gt;
+
+&lt;p&gt;The bag-of-words model is a simplifying representation used in natural language processing. In this model, a text is represented as the collection of its words, disregarding grammar and even word order but keeping multiplicity. One can also consider bag of bigram and trigram tokens as it can retain some local information in the text. It is also worth pointing out it is better to use pointwise mutual information (PMI) to select those N-gram patterns that are more likely to occur together. But we abstained from doing so as it is too computational expensive.&lt;/p&gt;
+
+&lt;h3 id=&#34;tf-idf-transformation&#34;&gt;Tf Idf Transformation&lt;/h3&gt;
+
+&lt;p&gt;After bag-of-words tokenization, each text ends up to be a set of words with corresponding counts. The simple counts representation has such a disadvantage that the longer document tends to have larger counts for some words. In order to fix this, it is better to divide the counts by the size of the document, then the counts become term frequency (tf). Another consideration is inverse document-frequency (idf). In a large text corpus, some words will be very present (e.g. &amp;ldquo;the&amp;rdquo;, &amp;ldquo;a&amp;rdquo;, &amp;ldquo;is&amp;rdquo; in English) hence carrying very little meaningful information about the actual contents of the document. The idf is defined as $$idf(t) = \log{\frac{n_d}{1+df(d, t)}}$$, where the \(n_d\) is the total number of documents, and \(df(d,t)\) is the number of documents that contain term t and &amp;ldquo;1&amp;rdquo; is just the smoothing term. Therefore, idf will make the rarer words more informative for certain type of documents. Then the tf-idf is just the product of the two components. We decided to use idf since it had improvement over the logistic regression unigram model.&lt;/p&gt;
+
+&lt;h3 id=&#34;annotation&#34;&gt;Annotation&lt;/h3&gt;
+
+&lt;p&gt;There are several famous lexicons online that contain sentiment words chosen by linguists. The one we chose is called AFINN list, including 2477 words, each of which also has a sentiment score on a scale of -5 to 5 (from negative to positive). We matched each word in all the tweets message and computed the sum of sentiment score for each text. It turned out the logistic regression could achieve 61.14% prediction accuracy based on this single attribute. Afterwards, we appended attribute to the unigram bag-of-word matrix we obtained before and used logistic regression to retrain the model. The prediction accuracy on test is 81.96%, improving the logistic regression baseline slightly by 1%. However, the computation became more time consuming later on expecially for SVM and we thought the reason might be that the new attribute somehow destructed the sparsity of data matrix. Finally, we determined to ignore this attribute since it had disadvantage in computation capacity and only had small improvement.&lt;/p&gt;
+
+&lt;h3 id=&#34;machine-learning-models&#34;&gt;Machine Learning Models&lt;/h3&gt;
+
+&lt;h4 id=&#34;naive-bayes&#34;&gt;Naive Bayes&lt;/h4&gt;
+
+&lt;p&gt;Naive Bayes is a generative model that makes the bag of words assumption (position doesn’t matter) and the conditional independence assumption (words are conditionally independent of each other given the class). The high bias and low variance model is a very common baseline and can do surprisingly well for small data sets.&lt;/p&gt;
+
+&lt;h4 id=&#34;logistic-regression&#34;&gt;Logistic Regression&lt;/h4&gt;
+
+&lt;p&gt;Logistic regression, also called maximum entropy model, is a discriminative model with good computational performance for large linearly seperated data sets.&lt;/p&gt;
+
+&lt;h4 id=&#34;svm&#34;&gt;SVM&lt;/h4&gt;
+
+&lt;p&gt;Support vector machines (SVMs) are supervised learning models that can have very high performance in high dimensional spaces, therefore it can be very effective in text classification.&lt;/p&gt;
+
+&lt;h2 id=&#34;result&#34;&gt;Result&lt;/h2&gt;
+
+&lt;p&gt;&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+table, th, td {
+    border: 2px solid black;
+    width: 45%;
+    padding: 15px;
+    text-align: left;
+}
+&lt;/style&gt;
+&lt;/head&gt;&lt;/p&gt;
+
+&lt;p&gt;Accuracy Report:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Model&lt;/th&gt;
+&lt;th&gt;Feature&lt;/th&gt;
+&lt;th&gt;Accuracy&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;MultiNB&lt;/td&gt;
+&lt;td&gt;N/A&lt;/td&gt;
+&lt;td&gt;78.15%&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Logistic&lt;/td&gt;
+&lt;td&gt;N/A&lt;/td&gt;
+&lt;td&gt;80.22%&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;SVM&lt;/td&gt;
+&lt;td&gt;N/A&lt;/td&gt;
+&lt;td&gt;80.71%&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;MultiNB&lt;/td&gt;
+&lt;td&gt;Negation&lt;/td&gt;
+&lt;td&gt;78.66%&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;MultiNB&lt;/td&gt;
+&lt;td&gt;stopwords&lt;/td&gt;
+&lt;td&gt;76.68%&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Logistic&lt;/td&gt;
+&lt;td&gt;Ngram(1-3)&lt;/td&gt;
+&lt;td&gt;82.08%&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;SVM&lt;/td&gt;
+&lt;td&gt;Ngram(1-3)&lt;/td&gt;
+&lt;td&gt;84.62%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;SVM Report:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;Precision&lt;/th&gt;
+&lt;th&gt;Recall&lt;/th&gt;
+&lt;th&gt;F1 score&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0.83&lt;/td&gt;
+&lt;td&gt;0.86&lt;/td&gt;
+&lt;td&gt;0.85&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;0.86&lt;/td&gt;
+&lt;td&gt;0.83&lt;/td&gt;
+&lt;td&gt;0.84&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;ROC Curve:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/sentiment/output_51_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;From the tables above we can easily find that SVM and Logistic Regression are both better than Naive Bayes and they perform almost the same for our dataset. This is obviously true because the high bias low variance classifiers like Naive Bayes work well only in small dataset(&amp;lt; 10000).&lt;/p&gt;
+
+&lt;p&gt;When introducing some feature engineering process such as emoji changing and negation, the accuracy remains almost the same and removing stop words even cause the accuracy decreasing by 2%. It tells us that stop words are informative especially in short text like tweets.&lt;/p&gt;
+
+&lt;p&gt;Mixing unigram with bigram and trigram seems to a significant improvement for logistic(2%) and SVM(4%). Here we discard Navie Beyes since it is not proper for our data based on early discussions.&lt;/p&gt;
+
+&lt;h2 id=&#34;summary-and-future&#34;&gt;Summary and Future&lt;/h2&gt;
+
+&lt;p&gt;The best combination of algorithm and feature engineering method is SVM + Mixed Ngram. SVM with linear kernal is good both on binary text classification and computational performance while bag of single word analysis is not informative enough.&lt;/p&gt;
+
+&lt;p&gt;In the future, we are going to perform multinomial classification such as positive, neutral and negative and also train different models for different topic.&lt;/p&gt;
+
+&lt;h2 id=&#34;a-small-sample-of-code&#34;&gt;A Small Sample of Code&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfTransformer, TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC, LinearSVC
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import GridSearchCV
+from nltk.corpus import stopwords
+import nltk
+import re
+from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import classification_report
+import matplotlib.pyplot as plt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Randomly select about 25% of original dataset and split it into training(80%) and test(20%).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;whole_data = pd.read_csv(&#39;Sentiment Analysis Dataset.csv&#39;, header=0, error_bad_lines=False)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;b&#39;Skipping line 8836: expected 4 fields, saw 5\n&#39;
+b&#39;Skipping line 535882: expected 4 fields, saw 7\n&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;whole_data.shape
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;(1578612, 4)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;idx = np.random.randint(0,1578612,400000)
+reduce_data = whole_data.loc[idx]
+data_train, data_test = train_test_split(reduce_data, test_size = 0.2)
+train = data_train[[&#39;Sentiment&#39;, &#39;SentimentText&#39;]].reset_index().drop(&#39;index&#39;, axis=1)
+test = data_test[[&#39;Sentiment&#39;, &#39;SentimentText&#39;]].reset_index().drop(&#39;index&#39;, axis=1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;test.head()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;Sentiment&lt;/th&gt;
+      &lt;th&gt;SentimentText&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;One of my best friends gave birth 2 weeks ago ...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;@Diana_Rosalien haha HELLO! i&#39;m home! and i go...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;@jamie_oliver had a nice weekend, didnt do muc...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;@Adman500 Haha, thankyou very much&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;@denifty I&#39;m really sorry. I thought updates w...&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;train[&#39;Sentiment&#39;].sum()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;160378
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;train.to_csv(&#39;train.csv&#39;)
+test.to_csv(&#39;test.csv&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Vectorization on each twiiter shorttext.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def feature_transform(sent):
+    out = sent
+    
+    # feature set: emoji, hashtag, url(hyperlink), &amp;quot;I’m in a hurrryyyyy&amp;quot;
+    feature_set = {r&#39;:-\)|:\)|\(:|\(-:&#39;: &#39;smile&#39;, \
+                r&#39;:-D|:D|X-D|XD|xD&#39;: &#39;laugh&#39;, \
+                r&#39;&amp;lt;3|:\*&#39;: &#39;kiss&#39;, \
+                r&#39;;-\)|;\)|;-D|;D|\(;|\(-;&#39;: &#39;wink&#39;, \
+                r&#39;:-\(|:\(|\(:|\(-:&#39;: &#39;frown&#39;, \
+                r&#39;:,\(|:\&#39;\(|:&amp;quot;\(|:\(\(&#39;: &#39;cry&#39;,\
+                r&#39;#(\w+)&#39;: r&#39;HASH_\1&#39;, \
+                r&#39;(http|https|ftp)://[a-zA-Z0-9\\./]+&#39;: &#39;URL&#39;, \
+                r&#39;(.)\1{1,}&#39;: r&#39;\1\1&#39;}
+    
+    for key, value in feature_set.items():
+        #print(key, value)
+        out = re.sub(key, value, out)
+        
+    return out
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;test.ix[4,&#39;SentimentText&#39;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;@denifty I&#39;m really sorry. I thought updates were free for touch users too &amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;MultiNB&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;test = pd.read_csv(&#39;test.csv&#39;, header = 0)
+y_test = test.Sentiment
+X_test = test.SentimentText
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;train = pd.read_csv(&#39;train.csv&#39;, header = 0)
+y = train.Sentiment
+X = train.SentimentText
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;text_clf = Pipeline([(&#39;vect&#39;, CountVectorizer()), \
+                     (&#39;tfidf&#39;, TfidfTransformer()), \
+                     (&#39;clf&#39;, MultinomialNB())])
+
+text_clf.fit(X,y)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Pipeline(steps=[(&#39;vect&#39;, CountVectorizer(analyzer=&#39;word&#39;, binary=False, decode_error=&#39;strict&#39;,
+        dtype=&amp;lt;class &#39;numpy.int64&#39;&amp;gt;, encoding=&#39;utf-8&#39;, input=&#39;content&#39;,
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words=None,
+        strip...inear_tf=False, use_idf=True)), (&#39;clf&#39;, MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True))])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;pred = text_clf.predict(X_test)
+acc_NB = np.mean(pred == y_test)
+acc_NB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;0.78158749999999999
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Logistic&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;text_clf = Pipeline([(&#39;vect&#39;, CountVectorizer()), \
+                     (&#39;tfidf&#39;, TfidfTransformer()), \
+                     (&#39;clf&#39;, LogisticRegression())])
+
+text_clf.fit(X,y)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Pipeline(steps=[(&#39;vect&#39;, CountVectorizer(analyzer=&#39;word&#39;, binary=False, decode_error=&#39;strict&#39;,
+        dtype=&amp;lt;class &#39;numpy.int64&#39;&amp;gt;, encoding=&#39;utf-8&#39;, input=&#39;content&#39;,
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words=None,
+        strip...ty=&#39;l2&#39;, random_state=None, solver=&#39;liblinear&#39;, tol=0.0001,
+          verbose=0, warm_start=False))])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;pred = text_clf.predict(X_test)
+logit_NB = np.mean(pred == y_test)
+logit_NB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;0.8021625
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;logistic with Ngram&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;text_clf = Pipeline([(&#39;vect&#39;, CountVectorizer(ngram_range=(1,3))), \
+                     (&#39;tfidf&#39;, TfidfTransformer()), \
+                     (&#39;clf&#39;, LogisticRegression())])
+
+text_clf.fit(X,y)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Pipeline(steps=[(&#39;vect&#39;, CountVectorizer(analyzer=&#39;word&#39;, binary=False, decode_error=&#39;strict&#39;,
+        dtype=&amp;lt;class &#39;numpy.int64&#39;&amp;gt;, encoding=&#39;utf-8&#39;, input=&#39;content&#39;,
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 3), preprocessor=None, stop_words=None,
+        strip...ty=&#39;l2&#39;, random_state=None, solver=&#39;liblinear&#39;, tol=0.0001,
+          verbose=0, warm_start=False))])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;pred = text_clf.predict(X_test)
+logit_NB_ngram = np.mean(pred == y_test)
+logit_NB_ngram
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;0.82082500000000003
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;SVM&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;text_clf = Pipeline([(&#39;vect&#39;, CountVectorizer(ngram_range=(1,3))), \
+                     (&#39;tfidf&#39;, TfidfTransformer()), \
+                     (&#39;clf&#39;, LinearSVC())])
+
+text_clf.fit(X,y)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Pipeline(steps=[(&#39;vect&#39;, CountVectorizer(analyzer=&#39;word&#39;, binary=False, decode_error=&#39;strict&#39;,
+        dtype=&amp;lt;class &#39;numpy.int64&#39;&amp;gt;, encoding=&#39;utf-8&#39;, input=&#39;content&#39;,
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 3), preprocessor=None, stop_words=None,
+        strip...ax_iter=1000,
+     multi_class=&#39;ovr&#39;, penalty=&#39;l2&#39;, random_state=None, tol=0.0001,
+     verbose=0))])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;pred_svm = text_clf.predict(X_test)
+svm_ngram = np.mean(pred == y_test)
+svm_ngram
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;0.84617500000000001
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hypeparameter tuning&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;parameters = {&#39;clf__C&#39;:(0.01,0.1,1,10)}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;%%time
+gs_clf = GridSearchCV(text_clf, parameters, n_jobs=-1, cv=2)
+gs_clf_result= gs_clf.fit(X[:100000],y[:100000])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;CPU times: user 16.2 s, sys: 941 ms, total: 17.2 s
+Wall time: 1min 12s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;%%time 
+clf = text_clf
+clf.fit(X, y)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;CPU times: user 53.5 s, sys: 3.17 s, total: 56.6 s
+Wall time: 57.7 s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;gs_clf_result.best_score_
+gs_clf_result.best_params_
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;{&#39;clf__C&#39;: 1}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;SVM Classification report&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print(classification_report(y_test,pred_svm))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;             precision    recall  f1-score   support
+
+          0       0.83      0.86      0.85     39962
+          1       0.86      0.83      0.84     40038
+
+avg / total       0.85      0.85      0.85     80000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ROC Curve&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;text_clf = Pipeline([(&#39;vect&#39;, CountVectorizer()), \
+                     (&#39;tfidf&#39;, TfidfTransformer()), \
+                     (&#39;clf&#39;, MultinomialNB())])
+
+text_clf.fit(X,y)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Pipeline(steps=[(&#39;vect&#39;, CountVectorizer(analyzer=&#39;word&#39;, binary=False, decode_error=&#39;strict&#39;,
+        dtype=&amp;lt;class &#39;numpy.int64&#39;&amp;gt;, encoding=&#39;utf-8&#39;, input=&#39;content&#39;,
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words=None,
+        strip...inear_tf=False, use_idf=True)), (&#39;clf&#39;, MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True))])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;Y_test_prob = text_clf.predict_proba(X_test)[:,1]
+fpr_nb, tpr_nb, thresholds_nb =roc_curve(y_test,Y_test_prob)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;text_clf = Pipeline([(&#39;vect&#39;, CountVectorizer()), \
+                     (&#39;tfidf&#39;, TfidfTransformer()), \
+                     (&#39;clf&#39;, LogisticRegression())])
+
+text_clf.fit(X,y)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Pipeline(steps=[(&#39;vect&#39;, CountVectorizer(analyzer=&#39;word&#39;, binary=False, decode_error=&#39;strict&#39;,
+        dtype=&amp;lt;class &#39;numpy.int64&#39;&amp;gt;, encoding=&#39;utf-8&#39;, input=&#39;content&#39;,
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words=None,
+        strip...ty=&#39;l2&#39;, random_state=None, solver=&#39;liblinear&#39;, tol=0.0001,
+          verbose=0, warm_start=False))])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;Y_logit_prob = text_clf.predict_proba(X_test)[:,1]
+fpr_logit, tpr_logit, thresholds_logit =roc_curve(y_test,Y_logit_prob)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;text_clf = Pipeline([(&#39;vect&#39;, CountVectorizer(ngram_range=(1,3))), \
+                     (&#39;tfidf&#39;, TfidfTransformer()), \
+                     (&#39;clf&#39;, LogisticRegression())])
+
+text_clf.fit(X,y)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Pipeline(steps=[(&#39;vect&#39;, CountVectorizer(analyzer=&#39;word&#39;, binary=False, decode_error=&#39;strict&#39;,
+        dtype=&amp;lt;class &#39;numpy.int64&#39;&amp;gt;, encoding=&#39;utf-8&#39;, input=&#39;content&#39;,
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 3), preprocessor=None, stop_words=None,
+        strip...ty=&#39;l2&#39;, random_state=None, solver=&#39;liblinear&#39;, tol=0.0001,
+          verbose=0, warm_start=False))])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;Y_logit_ngram_prob = text_clf.predict_proba(X_test)[:,1]
+fpr_logit_ngram, tpr_logit_ngram, thresholds_logit_ngram =roc_curve(y_test,Y_logit_ngram_prob)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;plt.plot(fpr_nb, tpr_nb, label=&#39;NB&#39;)
+plt.plot(fpr_logit, tpr_logit, label=&#39;logit&#39;)
+plt.plot(fpr_logit_ngram, tpr_logit_ngram, label=&#39;logit_ngram&#39;)
+plt.plot([0, 1], [0, 1], &#39;--&#39;, label=&#39;random decision&#39;)
+plt.xlabel(&#39;Fail positive rate&#39;)
+plt.ylabel(&#39;True positive rate&#39;)
+plt.legend(loc=4)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;auc(fpr_logit,tpr_logit)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;0.86817554821593235
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    
+    <item>
+      <title>Data Scientist Vs Software engineer from Cybercoder</title>
+      <link>/projects/cybercoders/Project_edited_version/</link>
+      <pubDate>Wed, 15 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/cybercoders/Project_edited_version/</guid>
+      <description>&lt;p&gt;What are the most popular jobs in silicaon valley? The answer is absolutely data scientist and software engineer. Want to learn more detials about these two fantastic jobs? Come with me!!&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#introduction&#34;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#posting-dates&#34;&gt;Posting Dates&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#location&#34;&gt;Location&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#salary&#34;&gt;Salary&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#what-is-the-situation-of-the-software-development-engineer&#34;&gt;What&amp;rsquo;s the situation of the software development engineer?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#experience&#34;&gt;Experience&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#skill-set&#34;&gt;Skill Set&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#what-about-software-development-engineer&#34;&gt;What about software development engineer?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#degree&#34;&gt;Degree&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;introduction&#34;&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;
+Nowadays, the data science field is hot, and it is unlikely that this will change in the near future. While a data driven approach is finding its way into all facets of business, companies are fiercely fighting for the best data analytic skills that are available in the market, and salaries for data science roles are going in overdrive. Compare with the commonly popular IT related job position, such as software engineer, most of big companies’ increased focus on acquiring data science talent goes hand in hand with the creation of a whole new set of data science roles and titles. 
+&lt;/p&gt;
+
+&lt;p&gt;On the other hand, we are all graduating this spring with the degree of statistics. So we are interested in the job placement for the statistic degree. As we discussed above, the data scientists and analysts are really popular in the job market. We wonder the difference of data scientist and software engineers in term of location, salary, skill sets, experience, degree preference. So we want to find a online employment search website to gather the in-time information and data to figure out this problem. 
+&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.cybercoders.com/&#34;&gt;CyberCoders&lt;/a&gt; is one of the innovative employment search website in the state. The version of cybercoder’s website is really clear and formatted. Since their posts have no outside links like other employment search websites, we are easier to get the content of each post to construct a data frame. Also, this website focuses more on the IT related job markets, so it is perfect for us to analyze content. Additionally, this website is well organized and frequently update since we found the most of job are posted within 10 days.  
+&lt;/p&gt;
+
+&lt;p&gt;The web crawler is &lt;a href=&#34;https://github.com/MadScientistKris/Cybercoders-Scraping/blob/master/Project_edited.ipynb&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In our project, we get the information of 109 Data Scientist and 200 Software Engineer job postings on CyberCoders through web scraping, which includes the job title, id, description, post data, salary range, preferred skills, city, and state. We compare the salary of DS and SDE, also including the comparison among different part of US. What is more, we find the need of years of experience through regular expression, the most important skills through NLP techniques. The degree required for the job and the posting dates are also topics we are interested in.
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import numpy as np
+import pandas as pd
+import nltk
+import string
+import unicodedata
+from collections import Counter
+from nltk.corpus import stopwords
+import pandas as pd
+import matplotlib.pyplot as plt
+import os,re
+from collections import Counter
+from datetime import datetime,date
+import seaborn as sns
+import folium
+from IPython.display import HTML
+from IPython.display import IFrame
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+from itertools import compress
+from nltk.corpus import stopwords
+from wordcloud import WordCloud,STOPWORDS
+from geopy.geocoders import Nominatim
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;ds = pd.read_csv(&#39;data scientist.csv&#39;,index_col=False)
+del ds[&#39;Unnamed: 0&#39;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;posting-dates&#34;&gt;Posting Dates&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print Counter(ds[&#39;post_date&#39;])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Counter({&#39;03/04/2017&#39;: 72, &#39;02/23/2017&#39;: 21, &#39;02/28/2017&#39;: 3, &#39;03/03/2017&#39;: 2, &#39;03/01/2017&#39;: 2, &#39;02/17/2017&#39;: 1, &#39;01/04/2017&#39;: 1, &#39;01/17/2017&#39;: 1, &#39;02/02/2017&#39;: 1, &#39;02/03/2017&#39;: 1, &#39;12/14/2016&#39;: 1, &#39;01/09/2017&#39;: 1, &#39;02/20/2017&#39;: 1, &#39;01/30/2017&#39;: 1})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We get these data on Mar 4th 2017, and we want to know the posting date of these jobs. Here, you can find a interesting thing. The post dates are not uniformly distributed, and most of jobs are posted on 3/4/2017 and 2/23/2017. If you open the CyberCoders web now(3/5/2017), you can find a lot of jobs, whose job id is same as the ones of yesterday, are marked as &#39;Posting Today&#39;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;datevalues = Counter(ds[&#39;post_date&#39;])
+datevalues = [datetime.strptime(i,&#39;%m/%d/%Y&#39;) for i in datevalues]
+[datetime(2017,3,4)-i for i in datevalues]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;[datetime.timedelta(15),
+ datetime.timedelta(1),
+ datetime.timedelta(59),
+ datetime.timedelta(46),
+ datetime.timedelta(30),
+ datetime.timedelta(29),
+ datetime.timedelta(80),
+ datetime.timedelta(54),
+ datetime.timedelta(12),
+ datetime.timedelta(9),
+ datetime.timedelta(33),
+ datetime.timedelta(3),
+ datetime.timedelta(0),
+ datetime.timedelta(4)]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;ds[&#39;post_date&#39;] = pd.to_datetime(ds[&#39;post_date&#39;])
+plot = sns.factorplot(&#39;post_date&#39;,kind = &#39;count&#39;,data = ds,size=4, aspect=2)
+plot.set(xticklabels=[&#39;12/14/2016&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;02/23/2017&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;03/04/2017&#39;])
+plt.title(&#39;Job Posting Numbers vs Dates&#39;)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_8_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The oldest job is posted on 12/14/2016, 80 days ago. However, most jobs are posted in recent 10 days.&lt;/p&gt;
+
+&lt;h3 id=&#34;location&#34;&gt;Location&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;geolocator = Nominatim()
+loc = geolocator.geocode(&amp;quot;New York, NY&amp;quot;)
+loc
+ds[&#39;location&#39;] = ds[&#39;city&#39;]+&#39;,&#39;+ds[&#39;state&#39;]
+lonlat = [geolocator.geocode(i, timeout=10) for i in ds.location]
+lonlat[2]
+print Counter(ds[&#39;state&#39;])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Counter({&#39;CA&#39;: 51, &#39;NY&#39;: 14, &#39;WA&#39;: 12, &#39;MA&#39;: 8, &#39;MD&#39;: 4, &#39;DC&#39;: 3, &#39;OH&#39;: 2, &#39;VA&#39;: 2, &#39;IL&#39;: 2, &#39;CT&#39;: 2, &#39;TX&#39;: 1, &#39;CO&#39;: 1, &#39;PA&#39;: 1, &#39;SC&#39;: 1, &#39;MO&#39;: 1, &#39;KY&#39;: 1, &#39;AZ&#39;: 1, &#39;FL&#39;: 1, &#39;OR&#39;: 1})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We transform the text to the real GPS data. Above location GPS data is the one example of how we get.  And we can see the count of the number of job post of each state.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;mapds = folium.Map(location=[39,-98.35], zoom_start=4)
+marker_cluster = folium.MarkerCluster(&amp;quot;Data Scientist Job&amp;quot;).add_to(mapds)
+for each in lonlat:
+    folium.Marker(each[1]).add_to(marker_cluster)
+    folium.MarkerCluster()
+
+mapds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div style=&#34;width:100%;&#34;&gt;&lt;div style=&#34;position:relative;width:100%;height:0;padding-bottom:60%;&#34;&gt;&lt;iframe src=&#34;data:text/html;charset=utf-8;base64,PCFET0NUWVBFIGh0bWw+CjxoZWFkPiAgICAKICAgIDxtZXRhIGh0dHAtZXF1aXY9ImNvbnRlbnQtdHlwZSIgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PVVURi04IiAvPgogICAgPHNjcmlwdD5MX1BSRUZFUl9DQU5WQVMgPSBmYWxzZTsgTF9OT19UT1VDSCA9IGZhbHNlOyBMX0RJU0FCTEVfM0QgPSBmYWxzZTs8L3NjcmlwdD4KICAgIDxzY3JpcHQgc3JjPSJodHRwczovL3VucGtnLmNvbS9sZWFmbGV0QDEuMC4xL2Rpc3QvbGVhZmxldC5qcyI+PC9zY3JpcHQ+CiAgICA8c2NyaXB0IHNyYz0iaHR0cHM6Ly9hamF4Lmdvb2dsZWFwaXMuY29tL2FqYXgvbGlicy9qcXVlcnkvMS4xMS4xL2pxdWVyeS5taW4uanMiPjwvc2NyaXB0PgogICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vYm9vdHN0cmFwLzMuMi4wL2pzL2Jvb3RzdHJhcC5taW4uanMiPjwvc2NyaXB0PgogICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL0xlYWZsZXQuYXdlc29tZS1tYXJrZXJzLzIuMC4yL2xlYWZsZXQuYXdlc29tZS1tYXJrZXJzLmpzIj48L3NjcmlwdD4KICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMS4wLjAvbGVhZmxldC5tYXJrZXJjbHVzdGVyLXNyYy5qcyI+PC9zY3JpcHQ+CiAgICA8c2NyaXB0IHNyYz0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzEuMC4wL2xlYWZsZXQubWFya2VyY2x1c3Rlci5qcyI+PC9zY3JpcHQ+CiAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vdW5wa2cuY29tL2xlYWZsZXRAMS4wLjEvZGlzdC9sZWFmbGV0LmNzcyIgLz4KICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIiAvPgogICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9jc3MvYm9vdHN0cmFwLXRoZW1lLm1pbi5jc3MiIC8+CiAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vZm9udC1hd2Vzb21lLzQuNi4zL2Nzcy9mb250LWF3ZXNvbWUubWluLmNzcyIgLz4KICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvTGVhZmxldC5hd2Vzb21lLW1hcmtlcnMvMi4wLjIvbGVhZmxldC5hd2Vzb21lLW1hcmtlcnMuY3NzIiAvPgogICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMS4wLjAvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIgLz4KICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzEuMC4wL01hcmtlckNsdXN0ZXIuY3NzIiAvPgogICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL3Jhd2dpdC5jb20vcHl0aG9uLXZpc3VhbGl6YXRpb24vZm9saXVtL21hc3Rlci9mb2xpdW0vdGVtcGxhdGVzL2xlYWZsZXQuYXdlc29tZS5yb3RhdGUuY3NzIiAvPgogICAgPHN0eWxlPmh0bWwsIGJvZHkge3dpZHRoOiAxMDAlO2hlaWdodDogMTAwJTttYXJnaW46IDA7cGFkZGluZzogMDt9PC9zdHlsZT4KICAgIDxzdHlsZT4jbWFwIHtwb3NpdGlvbjphYnNvbHV0ZTt0b3A6MDtib3R0b206MDtyaWdodDowO2xlZnQ6MDt9PC9zdHlsZT4KICAgIAogICAgICAgICAgICA8c3R5bGU+ICNtYXBfMmY5YWRjNDdjYzhhNDU0OGE4ZjBiZTY3N2QyZmJlMzYgewogICAgICAgICAgICAgICAgcG9zaXRpb24gOiByZWxhdGl2ZTsKICAgICAgICAgICAgICAgIHdpZHRoIDogMTAwLjAlOwogICAgICAgICAgICAgICAgaGVpZ2h0OiAxMDAuMCU7CiAgICAgICAgICAgICAgICBsZWZ0OiAwLjAlOwogICAgICAgICAgICAgICAgdG9wOiAwLjAlOwogICAgICAgICAgICAgICAgfQogICAgICAgICAgICA8L3N0eWxlPgogICAgICAgIAo8L2hlYWQ+Cjxib2R5PiAgICAKICAgIAogICAgICAgICAgICA8ZGl2IGNsYXNzPSJmb2xpdW0tbWFwIiBpZD0ibWFwXzJmOWFkYzQ3Y2M4YTQ1NDhhOGYwYmU2NzdkMmZiZTM2IiA+PC9kaXY+CiAgICAgICAgCjwvYm9keT4KPHNjcmlwdD4gICAgCiAgICAKCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgdmFyIHNvdXRoV2VzdCA9IEwubGF0TG5nKC05MCwgLTE4MCk7CiAgICAgICAgICAgICAgICB2YXIgbm9ydGhFYXN0ID0gTC5sYXRMbmcoOTAsIDE4MCk7CiAgICAgICAgICAgICAgICB2YXIgYm91bmRzID0gTC5sYXRMbmdCb3VuZHMoc291dGhXZXN0LCBub3J0aEVhc3QpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIHZhciBtYXBfMmY5YWRjNDdjYzhhNDU0OGE4ZjBiZTY3N2QyZmJlMzYgPSBMLm1hcCgKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdtYXBfMmY5YWRjNDdjYzhhNDU0OGE4ZjBiZTY3N2QyZmJlMzYnLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge2NlbnRlcjogWzM5LC05OC4zNV0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB6b29tOiA0LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbWF4Qm91bmRzOiBib3VuZHMsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYXllcnM6IFtdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgd29ybGRDb3B5SnVtcDogZmFsc2UsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcnM6IEwuQ1JTLkVQU0czODU3CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgICAKICAgICAgICAKICAgIAogICAgICAgICAgICB2YXIgdGlsZV9sYXllcl9hYmM4OTRmNjcwODU0Yjg2OGU5ZTI4NTFlYTUzZGIxOSA9IEwudGlsZUxheWVyKAogICAgICAgICAgICAgICAgJ2h0dHBzOi8ve3N9LnRpbGUub3BlbnN0cmVldG1hcC5vcmcve3p9L3t4fS97eX0ucG5nJywKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBtYXhab29tOiAxOCwKICAgICAgICAgICAgICAgICAgICBtaW5ab29tOiAxLAogICAgICAgICAgICAgICAgICAgIGNvbnRpbnVvdXNXb3JsZDogZmFsc2UsCiAgICAgICAgICAgICAgICAgICAgbm9XcmFwOiBmYWxzZSwKICAgICAgICAgICAgICAgICAgICBhdHRyaWJ1dGlvbjogJ0RhdGEgYnkgPGEgaHJlZj0iaHR0cDovL29wZW5zdHJlZXRtYXAub3JnIj5PcGVuU3RyZWV0TWFwPC9hPiwgdW5kZXIgPGEgaHJlZj0iaHR0cDovL3d3dy5vcGVuc3RyZWV0bWFwLm9yZy9jb3B5cmlnaHQiPk9EYkw8L2E+LicsCiAgICAgICAgICAgICAgICAgICAgZGV0ZWN0UmV0aW5hOiBmYWxzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkuYWRkVG8obWFwXzJmOWFkYzQ3Y2M4YTQ1NDhhOGYwYmU2NzdkMmZiZTM2KTsKCiAgICAgICAgCiAgICAKICAgICAgICAgICAgdmFyIG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzID0gTC5tYXJrZXJDbHVzdGVyR3JvdXAoKTsKICAgICAgICAgICAgbWFwXzJmOWFkYzQ3Y2M4YTQ1NDhhOGYwYmU2NzdkMmZiZTM2LmFkZExheWVyKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNTAwYTBhYzRlYWRkNDA2N2I2MzI0YjIyZjI2MzY0NmYgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0Mi4zMzcwNDE0LC03MS4yMDkyMjEzXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzRkNzBiNzk4YjYxMTQwZDc4N2U0M2RlOWMwODAzYTZjID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzcuMzY4ODMwMSwtMTIyLjAzNjM0OTVdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfY2M3N2M5MDBkMDlkNDYzYmEzMWRhYWY4MzU1MDk4YjkgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0Ny41NzY2MzI0LC0xMjIuMjI3NjM3N10sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl85NTA1MjRhOGU0MTI0ZWYyYjgzZmY1NDc4YTU1N2Q2YyA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3LjQ4NTIxNTIsLTEyMi4yMzYzNTQ3XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2RkZWQ2NWYzODQ0ZTQxMGE5ODc3OTRjODg1ZjA4ZjVmID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDUuNTIwMjQ3MSwtMTIyLjY3NDE5NDhdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMTdiMjIzMDRiMWZkNDJjNGFmMDRmMTliNmRkOTM2N2QgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0Mi4yODM0MzEsLTcxLjIzMjgzMjhdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNTdlMzFmYjFkYTdhNGM2NDkyYjBhZWY5NGE4OGJlZjYgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0Ny42MDM4MzIxLC0xMjIuMzMwMDYyM10sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9kMGYwZGQ3N2ZjN2Q0ZDM5YTkyNTk1OTlkYmIyOGU4ZCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzMzLjYxNzAwOTIsLTExNy45Mjk0NF0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9hZGU1YzkyMTJkNzc0ZjYyYTQyZDQyOWRlODUzYTYwYSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzMzLjYxNzAwOTIsLTExNy45Mjk0NF0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl84ZDkwY2U4ODQ4N2Q0YzAwOWI5ZTA2NWY1MGZiZThiZSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3LjQ4NTIxNTIsLTEyMi4yMzYzNTQ3XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzIxY2RmNGM1MWI0YTQzNWI5YzE3NGFkZTAwZDA1M2U0ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDIuMzc1MDk5NywtNzEuMTA1NjE1Nl0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl82OGI5ZDZhM2RlMmU0MWRhYTMxZWQxNjNhYjA0NTkwMyA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjA4NDAwNTQsLTc3LjE1Mjc1NzJdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfY2ZmZGQ1ZGE2NjY3NGM5Mzg1YjM3ZTE2N2Q5NjFkOTMgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNC4xNTA4NzE4LC0xMTguNDQ4OTg2NF0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl83Nzc4ZmE3MjNmMzc0YzdlYTNlOTcwNDQ5Y2E5MTg4YyA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM4Ljg5NDk1NDksLTc3LjAzNjY0NTVdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfZWQ4MjhkYmY4ZDViNGRmN2JmNDQzNjE3NTlkMzFmYjQgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNC4wOTAwMDkxLC0xMTguMzYxNzQ0Ml0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8yMWRmMzIxYmE1MjA0MzUxODAxNTI1OGU5NjM2ZTI1NCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQwLjczMDU5OTEsLTczLjk4NjU4MTFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfZGYyNWQ5ZjA0NjExNGVkMzkwOTAwMGM0YjUyYWQxYzQgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0MS44NzU1NTQ2LC04Ny42MjQ0MjExXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzQ4ODVmYjljMDA3MTRlZGE4NzBmODZhODM1MWViOGQ3ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzcuNzc5MjgwOCwtMTIyLjQxOTIzNjJdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMmVjY2E4N2QzZDEyNDFjMTgyYzc1YTUzYTYwYTJhYjYgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszMy42MTcwMDkyLC0xMTcuOTI5NDRdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfOTM5ZGMzYmE0ODgzNGVjNWFlMTk1NDk1NzJiMGY4MWIgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy43NzkyODA4LC0xMjIuNDE5MjM2Ml0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl81M2Y3ZWY5NDg4Mjc0MWQ3OWJkMGQ5ZGNiNjc2ZTM3NSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3Ljc3OTI4MDgsLTEyMi40MTkyMzYyXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzcxMjYwMDFjYzkyODQ3MmVhNzJjNTMxNjEzNWMyNWNiID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzguODk0OTU0OSwtNzcuMDM2NjQ1NV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl85NDRmNDg3YjNmMjU0MzFmOGU1YjdlOTJlMzg5NmNhYyA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQwLjczMDU5OTEsLTczLjk4NjU4MTFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfN2MxZTZkMDYyN2Q5NDA3YmFmNThiOTJiMThiZTFiYmMgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNC4wOTAwMDkxLC0xMTguMzYxNzQ0Ml0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8zNmE5YTE3MzM4ZDM0YTgxOGI1ZjFhODUxNzA0ODRmZiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQyLjM3NTA5OTcsLTcxLjEwNTYxNTZdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfYzQ2NzljMDEyMmFiNDEzMmExYjY1MDEzZGIzMWRlYTcgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy4zODU1NzQ1LC0xMjIuMDgyMDQ5OV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9kYjNkMjUzN2FmZTY0MDNjYTFjYTVhYjRkMDY4ZjA3NiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzI4Ljc1NjYxOCwtODEuMzM4ODgzNzMxNF0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9kZTliMDg2ZmU5Nzk0MzJmYjE0YWMwNTcyMjJhMDdmOCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM4Ljg5NDk1NDksLTc3LjAzNjY0NTVdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMzY4NzI0YjYxZTFmNGRkMjhlZGU2OGI2ZGFhNTUyYmYgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy40NDIxNTYsLTEyMi4xNjM0NDcxXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzU3YzUyOTczMzc1MTRlZTNiNmJkNjE0NWFhMDZjM2I2ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDcuNjAzODMyMSwtMTIyLjMzMDA2MjNdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMWIyN2NhNDNkNDMyNDg4NTk3ZTI1YjEyMDhiZWRlOWMgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy41NjAwMzM2LC0xMjIuMjY4ODUyMV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9hNDBjNDc2MjgxMjc0ZTM3OGVjMzg0Y2VkMDExMGJlYiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQwLjczMDU5OTEsLTczLjk4NjU4MTFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMDhjNjEwMzFlYjYxNGYzZWJjY2VkODczZmE2YjdmMmEgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0MS4wNTM0MzAyLC03My41Mzg3MzRdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfZmU2YWJlNTQ2YTcxNGZiNWEzMzZiMWIyMWVkOGEyMjEgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0MS4wNTM0MzAyLC03My41Mzg3MzRdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNDA5NWRlMmI3MGUzNGZhMzg3NDkyN2EzMWU3YzYxYjggPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0MC43MzA1OTkxLC03My45ODY1ODExXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzE4ZjY3ZjdkNTQwNjQ2NThhYTdjYTNiM2MxOGQ1YjFkID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDcuNjAzODMyMSwtMTIyLjMzMDA2MjNdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfZDIxYTc3MDdjYjIyNGQ4ZmE2MDcwYjM3NGQ5NTQ2NWYgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0Mi4zNjA0ODIzLC03MS4wNTk1Njc3XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzNmZTU5NjhhOTFlNzQ5NTA4YjZjNzc2ZTg4NzFhNDc2ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDAuNzMwNTk5MSwtNzMuOTg2NTgxMV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9lNzBhY2Y1MTExMTQ0MDQwODI2ZWYxMzk1MmQ0NGFmNCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3Ljc3OTI4MDgsLTEyMi40MTkyMzYyXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzY1YThhNjgzY2IzMDQ2OWI4YzA5N2Y4NTJmZWI4NzE1ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDAuNzMwNTk5MSwtNzMuOTg2NTgxMV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl85NTFhOGFjOGExNzM0M2ZjYTY0NjJkOTk0NDk4Yjk1ZCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3LjM2ODgzMDEsLTEyMi4wMzYzNDk1XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzc1MWEyNzI4ZGQ1ZjRhMTNiODg0ZGRlOTM2ZWVmZGVjID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzcuMzY4ODMwMSwtMTIyLjAzNjM0OTVdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNDExNmE1OGMxMjdiNDkyNzgxNDQxNjU5OTdmOTEwZmIgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy43NzkyODA4LC0xMjIuNDE5MjM2Ml0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl85MDliZDNkOTgwMDY0ODg2YWZlNzBkZDNiNGUxOWYxNyA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQyLjM2MDQ4MjMsLTcxLjA1OTU2NzddLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMDZkNzk2MGNmOGRlNGNlZWEyNjUyMDAzN2VmM2M1ZDYgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0Mi4zNjA0ODIzLC03MS4wNTk1Njc3XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2QwYTBjZTkwYTY3MDRkOTk5MjVhMjVkZDgwM2U2N2JkID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDIuMzYwNDgyMywtNzEuMDU5NTY3N10sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl81NDMzMzQ5NDUxYzA0NWY3YTQyZjM4ZjQ0NzllZGM4YiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQ3LjYwMzgzMjEsLTEyMi4zMzAwNjIzXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzRiZDEzNzAxN2E0NDQxNWRhNzQzZDU3ZjY3ZDFmZGE1ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzcuMzM2MTkwNSwtMTIxLjg5MDU4MzJdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfN2Q3MzViYzVmNDk4NGM3ZjgxMmViY2I1MGM2MTQ1YmEgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy40NDIxNTYsLTEyMi4xNjM0NDcxXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzNhOGVmNWVkMmVkNDRiMTE5ZDJkNDExMzE3NTk2ZTI3ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzguOTg0ODI2NSwtNzcuMDk0NjQ1OF0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9iOTliMGZmZTk0MDg0MDY5OWVlOTNkZGFlY2M2OTZiNSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQ3LjYwMzgzMjEsLTEyMi4zMzAwNjIzXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2ZlYjk3ZTZkZjM1NzQ4MjY5ZjgzNjc5MjUzZTJmZWUzID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzQuMDU0OTM1LC0xMTguMjQ0NDc1OV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8xMzE0ZTQ0MmYwNDY0YTM2YjNjM2YxZDUxODU0ZDFhNCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQwLjczMDU5OTEsLTczLjk4NjU4MTFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfOGQ5YWE3NGJjNTljNDM2YTk1MDg3ODNkYWNiYTE1OGEgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0Ny42MDM4MzIxLC0xMjIuMzMwMDYyM10sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9hMmFjMGJiNzZmMGM0M2U3YjQ0MGY1MDJhZmNlYWU4ZSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM0LjAxOTY1NywtMTE4LjQ4NzU0ODldLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNjFlYWI5YmNiZTM3NGMxMmIyZDdkZTFjMzA0ZDFhZGQgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy43NzkyODA4LC0xMjIuNDE5MjM2Ml0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl85MzQ5NWJmMzZjNWU0NWFjYWRhMjA3NmE4MDUwNDdhNiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQ3LjYwMzgzMjEsLTEyMi4zMzAwNjIzXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzZhOGQyMmU5NzljMzQ5Yjc4NmJmMmNlOTM4ODQyMTkxID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzcuMzU0MTEzMiwtMTIxLjk1NTE3NDNdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfYzMyYWE1YzAxNGY1NGNmYjkxNmY1OTFkNGZjNmIxNjYgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy40ODUyMTUyLC0xMjIuMjM2MzU0N10sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9kZTlkYWQyODJjYWI0NWY1OWNhZDU1NWExZDUwNjcwMCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzMzLjQ0ODU4NjYsLTExMi4wNzczNDU1XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzFlMjI3MjkxN2YxZDRlMGZhMjZhMjliODIwNjg2NTJjID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDAuNzMwNTk5MSwtNzMuOTg2NTgxMV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl84ZDg1ZjNmMjk2N2Y0ZjliYTY4MDBlYmJlYzI4YTM2YiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3Ljc3OTI4MDgsLTEyMi40MTkyMzYyXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2U3OWZjMmQ3N2NjZDQwOWY5NDNhYTMzNDFmNWFiOTIwID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDcuNjAzODMyMSwtMTIyLjMzMDA2MjNdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfODc2ZjBhYjU0NjQ1NDZjNjk2ZmE0YTY1YmI0OGVhODUgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszOC42MjcyNzMzLC05MC4xOTc4ODg4XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2UyNzIzNTQ5NDI5MjQ3NTY5YmQ2NWIyMTIzZDZhYWQ2ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzMuNjE3MDA5MiwtMTE3LjkyOTQ0XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2ZmZGM1N2Q3Njg1NjQyNjU4NzU1OTlhMjRlZjlkNmY4ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzkuOTYyMjYwMSwtODMuMDAwNzA2NF0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl84OTI5YmIzNzk2NzY0YWY0OTExZjBjZjM0ZjgxMmEwOSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjczOTE1MzYsLTEwNC45ODQ3MDMzXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzAxZDZjODgwYmYyNTRmODI5OWU0MzBjNGZmYTk4M2IyID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzkuOTUyMzk5MywtNzUuMTYzNTg5OF0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9jMmJlNjgzZmI4MjI0MWQ2YjEyYjk3ZDNhMGE1MGVkOSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3LjQ5NjkwNCwtMTIyLjMzMzA1NzJdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNjY2ZTg1ZTAxNGIyNDk2MmFmMTNkYWY0ODY0NzYxNWYgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0MS44NzU1NTQ2LC04Ny42MjQ0MjExXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzk1YWYyOWNmMzU3ZDQ3ZmVhMDRjZDI3MjY2NDlmYzA4ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDAuNzMwNTk5MSwtNzMuOTg2NTgxMV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl85ZjNlYjBkMGYxZmY0MDAxYTU4MDZiYzc1YjdjYzEzYSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQwLjczMDU5OTEsLTczLjk4NjU4MTFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMTFkNWE0MWZjMDhkNDViZjk0Mzc4MWEwYTU5ODcxYzMgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy40OTY5MDQsLTEyMi4zMzMwNTcyXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2VlZjk1Y2M2OWFiZjQ5NmI4OTdjMDgxYTJlNDNhMzE2ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzQuMDkwMDA5MSwtMTE4LjM2MTc0NDJdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfN2EyZDE1ZTIyODA0NDNhNjk0NTRkZTg1MzUyMjY2ZGIgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy40OTY5MDQsLTEyMi4zMzMwNTcyXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2I0NzU1MzM1YzkzYzQ3Yzk4ZjU4MmNlMjlkYTZlZWVjID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzMuNjE3MDA5MiwtMTE3LjkyOTQ0XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzRkYjZkYzNkNGJlNDRlZDViZmFhMDhiNmEwNjU0MzEwID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzguOTU4NDAxOCwtNzcuMzU3OTc0Ml0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8wMmY1N2I4YTg3YzM0MGVmOTM4Y2IyYTgxMzQ2NzM5MCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM0LjAxOTY1NywtMTE4LjQ4NzU0ODldLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfN2U1NTIxMTY2NTViNDIyN2I3MTllOGQ1ZDkyNWU1N2YgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNC4wOTAwMDkxLC0xMTguMzYxNzQ0Ml0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9kZTZlMTA2YzNlZTM0NjE5YjVkZGM1NDIwZGNiNTY0MiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3Ljc3OTI4MDgsLTEyMi40MTkyMzYyXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2RjZDA3ZGZlMWM2MjRhZTQ4NzY4MWNjZDg4MTUzMTU4ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDcuNjAzODMyMSwtMTIyLjMzMDA2MjNdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNWNlNDRhM2ZmNjExNGVkMDhkODgwODA5YjQ2NTliY2QgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszOC4yNTQyMzc2LC04NS43NTk0MDY5XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzg0OWM2ODU0YTJhZDQ4ZDU4YzhlYzY4YjU0ODY5YzU5ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzQuMDU0OTM1LC0xMTguMjQ0NDc1OV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9lMTBhNGNiNDM4ZTM0ZmZhYmEwNjdkY2FiODY3ZjVlZiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzQ3LjYwMzgzMjEsLTEyMi4zMzAwNjIzXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzA1NTJjYjQ2ZDcxYTRlNmViNWEwYTI3MTE2MjQ1YjlkID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzcuMzg1NTc0NSwtMTIyLjA4MjA0OTldLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNzUxMmUxYWYxM2ExNGI1ZmE3YTgwOTk2NDUxYjNhOTEgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszOC45Nzg2NDAxLC03Ni40OTI3ODU5XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2IzMWZhMGU4N2FjYTRkOTA4NDhhNDdjMWQxNjc5MTUwID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDEuMDgzMDY0MywtODEuNTE4NDg1M10sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9lZjlkY2JhYmQ2M2U0YzE5OWI2OTAyMjk2MzM5OThiNyA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM4LjkzNDI4OSwtNzcuMTc3NjMyOV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl84N2QxNGM4NjZjNzM0NjRjYTRmY2I2NTdjMGEyZDZiMiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3LjQ5NjkwNCwtMTIyLjMzMzA1NzJdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfZGNiYTZmZTEyOWZlNDZhYWJhNTdhYTUzYTE1ZDcxZDggPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszOC4yNjQxNzI1LC03Ni40NTMxMDY5XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzdhYTgxNWRlYWU1ZTRiNmVhODk0MWM5NmIzMGUzOGQ1ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDAuNzMwNTk5MSwtNzMuOTg2NTgxMV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8wMGU1Yjc5MDg3ODA0Mjc5ODFmMDg0MGZhZTFmNzBhNSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3Ljc3OTI4MDgsLTEyMi40MTkyMzYyXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzQ3ZTZlYjViYzJjNjQzZjI5MGYyZTAwN2UwMTU4OWMzID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDAuNzMwNTk5MSwtNzMuOTg2NTgxMV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl85NmE2NGRlMDVmNzI0NDE5OTM3N2I5OWZiYzc3MDg4OCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3LjQ0MjE1NiwtMTIyLjE2MzQ0NzFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNDAwODY5Y2ZiYzY0NDA0NmE4NWY5ZjZhMjNiOGUyOWQgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFs0MC43MzA1OTkxLC03My45ODY1ODExXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzdiNTE5NzMxNTdlMjRhZmNiOWVlMjFlMjYzMTgzOTc2ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDAuNzMwNTk5MSwtNzMuOTg2NTgxMV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl85ODcyMDJiMDFlOGE0M2IxOGFhMjk5ZDUxYzE5OWU3YSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzMzLjk4MTUzNjksLTgxLjIzNjIxMDZdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfNTcwMDFhMGUyMWUyNDkxOGIxMTUyNGNlYjQ1MGUzYTUgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy43NzkyODA4LC0xMjIuNDE5MjM2Ml0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9kOTRlYmE1YzA5MzQ0NGFiYjkxODViZWRkMjAyOGY4MSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3Ljc3OTI4MDgsLTEyMi40MTkyMzYyXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzg4NTY0NmY3N2ZkYjRmNmU5ZTkwNWY1MmMwN2VlOGJhID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzcuNzc5MjgwOCwtMTIyLjQxOTIzNjJdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfYjE3ZGZlZTU4NjBlNGI0Mzg3OThhYTE0YzNkN2ZkM2IgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy43NzkyODA4LC0xMjIuNDE5MjM2Ml0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl81OTc5ZWI0Y2ZkMDU0NTMyYTRkOGQ5ODBkZGE0MTY4MyA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzMzLjY4NTY5NjksLTExNy44MjU5ODE4XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzhhNGMwZjlhNzNhYTRiNTJhZjM3Nzg1MzQzZWZkZmEyID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzcuNTYwMDMzNiwtMTIyLjI2ODg1MjFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMDVkMjRlZjVjOWZiNDI2ZGE4ZjZhMTlhM2Q4MTA2M2QgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy40ODUyMTUyLC0xMjIuMjM2MzU0N10sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8wOWZiMjQ2MmU5OTQ0Mzg3YjY0MjQ5NWIyZTI3YWE1NiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzI5LjQyNDYwMDIsLTk4LjQ5NTE0MDRdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCiAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfM2EyYmFjYmNkZTk0NGY4NDhiOGYyNmMwODgzOTgzMzUgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszNy40NDIxNTYsLTEyMi4xNjM0NDcxXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzdmMGEyMmViZDM3NTQ3ODI4YmJjOWI3MTM3ZmRjMTA5ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzcuNDQyMTU2LC0xMjIuMTYzNDQ3MV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFya2VyX2NsdXN0ZXJfOTQ4YjZlZDRkZmQ0NDk3M2ExOTI5YzAyNDJkNGZkZDMpOwogICAgICAgICAgICAKICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl9kMGQzYTY1MzcyNzk0ZmUyYjdhZjA4OWVmZTc4NTMyNCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM3Ljc3OTI4MDgsLTEyMi40MTkyMzYyXSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXJrZXJfY2x1c3Rlcl85NDhiNmVkNGRmZDQ0OTczYTE5MjljMDI0MmQ0ZmRkMyk7CiAgICAgICAgICAgIAogICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzQ0NzhlNDYyMzNkYTQ0Njc4NTlmNWY0YTAyYzZkZjMzID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbNDcuNjAzODMyMSwtMTIyLjMzMDA2MjNdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcmtlcl9jbHVzdGVyXzk0OGI2ZWQ0ZGZkNDQ5NzNhMTkyOWMwMjQyZDRmZGQzKTsKICAgICAgICAgICAgCjwvc2NyaXB0Pg==&#34; style=&#34;position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;&#34; allowfullscreen webkitallowfullscreen mozallowfullscreen&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;salary&#34;&gt;Salary&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;sum(pd.isnull(ds[&#39;salary_lower&#39;]))
+ds2 = ds[pd.notnull(ds[&#39;salary_lower&#39;])].copy()
+
+ds2 = ds2[ds2.salary_lower&amp;gt;0]
+#Only 74 records now
+ds2[&#39;salary_mid&#39;]=(ds.salary_lower+ds.salary_upper)/2
+print Counter(ds2.state)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Counter({&#39;CA&#39;: 36, &#39;NY&#39;: 12, &#39;MA&#39;: 7, &#39;WA&#39;: 4, &#39;MD&#39;: 2, &#39;IL&#39;: 2, &#39;CT&#39;: 2, &#39;TX&#39;: 1, &#39;OH&#39;: 1, &#39;CO&#39;: 1, &#39;VA&#39;: 1, &#39;PA&#39;: 1, &#39;SC&#39;: 1, &#39;MO&#39;: 1, &#39;AZ&#39;: 1, &#39;OR&#39;: 1})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the 109 data scientist posts we got from the cybercoder, there are 31 post without specific salary range, which denotes as unspecified. Also, there are 74 posts with positive salary range.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;d={}
+d[&#39;east&#39;]=[&#39;CT&#39;,&#39;MA&#39;,&#39;MD&#39;,&#39;NY&#39;,&#39;PA&#39;,&#39;SC&#39;,&#39;VA&#39;,&#39;ME&#39;,&#39;VT&#39;,&#39;NH&#39;,&#39;RI&#39;,&#39;NJ&#39;,&#39;DE&#39;,&#39;WV&#39;,&#39;NC&#39;,&#39;GA&#39;,&#39;AL&#39;]
+d[&#39;west&#39;]=[&#39;CA&#39;,&#39;OR&#39;,&#39;WA&#39;,&#39;AK&#39;,&#39;MO&#39;,&#39;ID&#39;,&#39;MT&#39;,&#39;NV&#39;,&#39;UT&#39;,&#39;WY&#39;]
+d[&#39;other&#39;]=[&#39;AZ&#39;,&#39;CO&#39;,&#39;IL&#39;,&#39;OH&#39;,&#39;TX&#39;]
+
+ds2[&#39;part&#39;]=&#39;&#39;
+
+index = [i in d[&#39;east&#39;] for i in ds2.state]
+index2 = [i in d[&#39;west&#39;] for i in ds2.state]
+index3 = [i in d[&#39;other&#39;] for i in ds2.state]
+ds2.loc[index,&#39;part&#39;]=&#39;east&#39;
+ds2.loc[index2,&#39;part&#39;]=&#39;west&#39;
+ds2.loc[index3,&#39;part&#39;]=&#39;other&#39;
+
+Counter(ds2.part)
+
+ds2.boxplot(&amp;quot;salary_mid&amp;quot;, &amp;quot;part&amp;quot;)
+plt.show()
+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_17_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above box plot shows that the west coast has the highest salary median among the whole state. The result makes sense since California have the Silicon Valley which aggregates a crowd of the most professional data scientist compared with other place. Also, we fit the linear regression model for the salary median and the states.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;mod = ols(&#39;salary_mid ~ part&#39;,
+                data=ds2).fit()
+                
+aov_table = sm.stats.anova_lm(mod, typ=2)
+print aov_table
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;                sum_sq    df         F    PR(&amp;gt;F)
+part      1.344950e+10   2.0  5.202564  0.007756
+Residual  9.306600e+10  72.0       NaN       NaN
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;what-is-the-situation-of-the-software-development-engineer&#34;&gt;What is the situation of the software development engineer&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;sde = pd.read_csv(&#39;Software_Engineer.csv&#39;,index_col=False)
+del sde[&#39;Unnamed: 0&#39;]
+
+sde2 = sde[pd.notnull(sde[&#39;salary_lower&#39;])].copy()
+
+sde2 = sde2[sde2.salary_lower&amp;gt;0]
+
+print len(sde)
+print len(sde2)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;200
+157
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt; There are 200 job posts of software development engineers in the website and just 157 posts with a positive salary range.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;sde2[&#39;salary_mid&#39;]=(sde2.salary_lower+sde2.salary_upper)/2
+Counter(sde2.state)
+sde2[&#39;part&#39;]=&#39;other&#39;
+index = [i in d[&#39;east&#39;] for i in sde2.state]
+index2 = [i in d[&#39;west&#39;] for i in sde2.state]
+sde2.loc[index,&#39;part&#39;]=&#39;east&#39;
+sde2.loc[index2,&#39;part&#39;]=&#39;west&#39;
+ds2[&#39;type&#39;]=&#39;Data Scientist&#39;
+sde2[&#39;type&#39;]=&#39;Software Engineer&#39;
+dssde = ds2.append(sde2)
+dssde.head()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div style=&#34;height:100%;overflow:auto;&#34;&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;city&lt;/th&gt;
+      &lt;th&gt;job_id&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;need_for_position&lt;/th&gt;
+      &lt;th&gt;part&lt;/th&gt;
+      &lt;th&gt;post_date&lt;/th&gt;
+      &lt;th&gt;preferred_skill&lt;/th&gt;
+      &lt;th&gt;salary_lower&lt;/th&gt;
+      &lt;th&gt;salary_mid&lt;/th&gt;
+      &lt;th&gt;salary_upper&lt;/th&gt;
+      &lt;th&gt;state&lt;/th&gt;
+      &lt;th&gt;type&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Newton&lt;/td&gt;
+      &lt;td&gt;BA-1277535&lt;/td&gt;
+      &lt;td&gt;Newton,MA&lt;/td&gt;
+      &lt;td&gt;- BS (min GPA 3.5) or MS or PhD in science, en...&lt;/td&gt;
+      &lt;td&gt;east&lt;/td&gt;
+      &lt;td&gt;02/23/2017&lt;/td&gt;
+      &lt;td&gt;Data Analytics, Informatics, Life Sciences . P...&lt;/td&gt;
+      &lt;td&gt;100000.0&lt;/td&gt;
+      &lt;td&gt;115000.0&lt;/td&gt;
+      &lt;td&gt;130000.0&lt;/td&gt;
+      &lt;td&gt;MA&lt;/td&gt;
+      &lt;td&gt;Data Scientist&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Sunnyvale&lt;/td&gt;
+      &lt;td&gt;BF1-1327877&lt;/td&gt;
+      &lt;td&gt;Sunnyvale,CA&lt;/td&gt;
+      &lt;td&gt;- Networking/Security  - Experience with big d...&lt;/td&gt;
+      &lt;td&gt;west&lt;/td&gt;
+      &lt;td&gt;02/23/2017&lt;/td&gt;
+      &lt;td&gt;Python, C/C++, Networking, Security, Apache Sp...&lt;/td&gt;
+      &lt;td&gt;150000.0&lt;/td&gt;
+      &lt;td&gt;175000.0&lt;/td&gt;
+      &lt;td&gt;200000.0&lt;/td&gt;
+      &lt;td&gt;CA&lt;/td&gt;
+      &lt;td&gt;Data Scientist&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Redwood City&lt;/td&gt;
+      &lt;td&gt;AW2-1341356&lt;/td&gt;
+      &lt;td&gt;Redwood City,CA&lt;/td&gt;
+      &lt;td&gt;Requirements: Bachelors in Computer Science or...&lt;/td&gt;
+      &lt;td&gt;west&lt;/td&gt;
+      &lt;td&gt;02/23/2017&lt;/td&gt;
+      &lt;td&gt;Machine Learning, Python, R, Mapreduce, Javasc...&lt;/td&gt;
+      &lt;td&gt;140000.0&lt;/td&gt;
+      &lt;td&gt;182500.0&lt;/td&gt;
+      &lt;td&gt;225000.0&lt;/td&gt;
+      &lt;td&gt;CA&lt;/td&gt;
+      &lt;td&gt;Data Scientist&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;Portland&lt;/td&gt;
+      &lt;td&gt;CS9-1346787&lt;/td&gt;
+      &lt;td&gt;Portland,OR&lt;/td&gt;
+      &lt;td&gt;Experience and knowledge of: - Machine Learnin...&lt;/td&gt;
+      &lt;td&gt;west&lt;/td&gt;
+      &lt;td&gt;02/23/2017&lt;/td&gt;
+      &lt;td&gt;Machine Learning, Data Mining, Python, ETL BI,...&lt;/td&gt;
+      &lt;td&gt;100000.0&lt;/td&gt;
+      &lt;td&gt;110000.0&lt;/td&gt;
+      &lt;td&gt;120000.0&lt;/td&gt;
+      &lt;td&gt;OR&lt;/td&gt;
+      &lt;td&gt;Data Scientist&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;Needham&lt;/td&gt;
+      &lt;td&gt;PD2-1346845&lt;/td&gt;
+      &lt;td&gt;Needham,MA&lt;/td&gt;
+      &lt;td&gt;- BS with a focus on life sciences. A degree i...&lt;/td&gt;
+      &lt;td&gt;east&lt;/td&gt;
+      &lt;td&gt;02/23/2017&lt;/td&gt;
+      &lt;td&gt;Data Analytics, Life Sciences, Pharmaceuticals...&lt;/td&gt;
+      &lt;td&gt;100000.0&lt;/td&gt;
+      &lt;td&gt;115000.0&lt;/td&gt;
+      &lt;td&gt;130000.0&lt;/td&gt;
+      &lt;td&gt;MA&lt;/td&gt;
+      &lt;td&gt;Data Scientist&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt; We use the same method on SDE that we apply into the data scientist. Then the above dataframe is the combination of the data scientist and SDE.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;sns.set(rc={&amp;quot;figure.figsize&amp;quot;: (8, 4)})
+sns.distplot(dssde.salary_mid[dssde[&#39;type&#39;]==&#39;Data Scientist&#39;],hist_kws={&amp;quot;label&amp;quot;:&#39;DS&#39;})
+sns.distplot(dssde.salary_mid[dssde[&#39;type&#39;]==&#39;Software Engineer&#39;],hist_kws={&amp;quot;label&amp;quot;:&#39;SDE&#39;})
+plt.title(&#39;Distribution of Salary: DS vs SDE&#39;)
+plt.legend()
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_25_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above plot shows the distribution of salary between data scientist and SDE. Actually, the  salary median of SDE is higher than data scientist.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;sns.boxplot(x=&amp;quot;part&amp;quot;, y=&amp;quot;salary_mid&amp;quot;, hue=&amp;quot;type&amp;quot;, data=dssde,palette=&amp;quot;Set1&amp;quot;)
+plt.title(&#39;Salary Compare: DS VS SDE&#39;)
+plt.show()
+
+mod2 = ols(&#39;salary_mid ~ part+type&#39;,
+                data=dssde).fit()
+                
+aov_table2 = sm.stats.anova_lm(mod2, typ=2)
+print aov_table2
+
+print mod2.summary()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_27_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;                sum_sq     df          F        PR(&amp;gt;F)
+part      2.344070e+10    2.0  13.568313  2.706902e-06
+type      5.785471e+10    1.0  66.976735  1.936368e-14
+Residual  1.969471e+11  228.0        NaN           NaN
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:             salary_mid   R-squared:                       0.355
+Model:                            OLS   Adj. R-squared:                  0.346
+Method:                 Least Squares   F-statistic:                     41.75
+Date:                Sat, 18 Mar 2017   Prob (F-statistic):           1.53e-21
+Time:                        17:26:08   Log-Likelihood:                -2714.1
+No. Observations:                 232   AIC:                             5436.
+Df Residuals:                     228   BIC:                             5450.
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+=============================================================================================
+                                coef    std err          t      P&amp;gt;|t|      [0.025      0.975]
+---------------------------------------------------------------------------------------------
+Intercept                  1.435e+05   4398.289     32.627      0.000    1.35e+05    1.52e+05
+part[T.other]             -1.199e+04   5318.300     -2.255      0.025   -2.25e+04   -1512.390
+part[T.west]               1.459e+04   4416.796      3.302      0.001    5882.069    2.33e+04
+type[T.Software Engineer] -3.501e+04   4278.214     -8.184      0.000   -4.34e+04   -2.66e+04
+==============================================================================
+Omnibus:                       46.401   Durbin-Watson:                   1.930
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               93.867
+Skew:                           0.984   Prob(JB):                     4.14e-21
+Kurtosis:                       5.416   Cond. No.                         4.59
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt; From the location view, we can see that two types of job in the west coast are still higher than other place and the salary of SDE is still higher than Data Scientist.&lt;/p&gt;
+
+&lt;h3 id=&#34;experience&#34;&gt;Experience&lt;/h3&gt;
+
+&lt;p&gt;We want to know how many of the job postings specify the exact number of years of experience. We use regular expression to get this kind of info.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;ds.need_for_position = [i.lower() for i in ds.need_for_position] 
+yoe= [re.findall(r&#39;[0-9\-\\+0-9]+ years of &#39;,i) for i in ds.need_for_position]
+yoe[:5]
+len(ds.need_for_position)- sum(i==[] for i in yoe)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;49
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Among the 109 jobs, 49 of them specify the years of experience.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;yoe2 = list(compress(yoe, [i!=[] for i in yoe]))
+del yoe2[8]
+del yoe2[17]
+yoe3 = [int(i[0][0]) for i in yoe2]
+Counter(yoe3)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Counter({1: 2, 2: 4, 3: 26, 4: 1, 5: 13, 8: 1})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;plt.bar(Counter(yoe3).keys(),Counter(yoe3).values())
+plt.xlabel(&#39;Years of experience&#39;)
+plt.ylabel(&#39;Count&#39;)
+plt.title(&#39;Bar Plot of Years of Experience-Data Scientist&#39;)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_33_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt; From the pie plot, we know that most of the job required 3 years experience before you apply for the job. This also denotes that the hard situation of finding the job in today&#39;s IT related job market. &lt;/p&gt;
+
+&lt;h3 id=&#34;skill-set&#34;&gt;Skill Set&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;ds_skill =&amp;quot;,&amp;quot;.join( ds[&#39;preferred_skill&#39;] ).lower()
+ds_needForPosition =&amp;quot;&amp;quot;.join( ds[&#39;need_for_position&#39;]).lower()
+def tokenize(text):
+    s = text.lower()
+    s = re.sub(r&#39;/|\(|\)&#39;, &#39;,&#39;, s.lower()).split(&#39;,&#39;)
+    s = [i.strip() for i in s if i != &#39;&#39;]
+    return s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# skill set from prefered_skill (&#39;sql&#39; vs &#39;sql database&#39;, )
+ds_filtered_skill = [word for word in tokenize(ds_skill) if word not in stopwords.words(&#39;english&#39;)] 
+nltk.FreqDist(ds_filtered_skill).plot(30)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_37_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt; From the above plot, we can see that the Python was the top one among the preferred skills, which means that STA 141 is a really useful class for us entering into the job market.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Two sets of words with intersection
+ds_skill_words = pd.DataFrame(nltk.FreqDist(ds_filtered_skill).most_common(8) )
+ds_skill_words.iloc[:,1] = ds_skill_words.iloc[:,1] / ds.shape[0] 
+ds_barplot = sns.barplot( x = 0, y = 1,data = ds_skill_words, palette = &amp;quot;Blues_d&amp;quot;)
+ds_barplot.set(xlabel = &#39;&#39;, ylabel = &#39;percentage in D.S. posts&#39;)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_39_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print ds_filtered_skill
+skill = ds_filtered_skill[:]
+for n, i in enumerate(skill):
+    if i == &#39;r&#39;:
+        skill[n] = &#39;R+++&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here are all the results of filted preferred skills.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+wordcloud = WordCloud(max_words=50,background_color = &#39;white&#39;, width = 2800,height = 2400, max_font_size = 1000, font_path = &amp;quot;/Users/shishengjie/Desktop/cabin-sketch/CabinSketch-Regular.ttf&amp;quot;).generate(&#39;,&#39;.join(skill))
+plt.figure(figsize=(18,16))
+plt.axis(&#39;off&#39;)
+plt.imshow(wordcloud)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_42_0.png&#34; width=&#34;700px&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;The above picture is data sciencetist wordcloud. There is a bug here for the wordcloud. Compared with the bar plot we generate for the preferred skill, we can see the skill &lt;strong&gt;&amp;ldquo;R&amp;rdquo;&lt;/strong&gt; is one of the three preferred skills. But we cannot find &lt;strong&gt;&amp;ldquo;R&amp;rdquo;&lt;/strong&gt; in the wordcloud picture. This problem also shown in the later SDE analysis. We guess the reason is that the algorithm of the wordcloud will igonre the single letter, such as &lt;strong&gt;&amp;ldquo;R&amp;rdquo;,&amp;ldquo;C&amp;rdquo;,&amp;ldquo;C++&amp;rdquo;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Since we have the &lt;strong&gt;&amp;ldquo;need for the position&amp;rdquo;&lt;/strong&gt; column in the dataset. We wonder the difference between the &lt;strong&gt;&amp;ldquo;need for the position&amp;rdquo;&lt;/strong&gt; and &lt;strong&gt;preferred skill&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# skill from need_for_position
+ds_filtered_needForPosition = [word for word in tokenize(ds_needForPosition) if word not in stopwords.words(&#39;english&#39;) and word not in [&#39;etc.&#39;,&#39;e.g.&#39;]] 
+nltk.FreqDist(ds_filtered_needForPosition).plot(30)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;/usr/local/lib/python2.7/site-packages/ipykernel/__main__.py:2: UnicodeWarning: Unicode equal comparison failed to convert both arguments to Unicode - interpreting them as being unequal
+  from ipykernel import kernelapp as app
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_45_1.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# experience required (not excluding empty entry)
+ds_needForPosition_list = list(ds[&#39;need_for_position&#39;])
+ds_needForPosition_list_lower = list(ds[&#39;need_for_position&#39;].str.lower()) # all lower case
+len([i for i in ds_needForPosition_list_lower if &#39;experi&#39; in i]) / float(len(ds_needForPosition_list_lower))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;0.8532110091743119
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Almost 86% of the job posts required the applicants have the previous related experience in the industry.&lt;/p&gt;
+
+&lt;h4 id=&#34;what-about-software-development-engineer&#34;&gt;What about software development engineer&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;sde = pd.read_csv(&#39;Software_Engineer.csv&#39;, index_col=False)
+del sde[&#39;Unnamed: 0&#39;]
+sde_skill =&amp;quot;,&amp;quot;.join( sde[&#39;preferred_skill&#39;] ).lower()
+sde_filtered_skill = [word for word in tokenize(sde_skill) if word not in stopwords.words(&#39;english&#39;)] 
+nltk.FreqDist(sde_filtered_skill).plot(30)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_49_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Two sets of words with intersection
+sde_skill_words = pd.DataFrame(nltk.FreqDist(sde_filtered_skill).most_common(8) )
+sde_skill_words.iloc[:,1] = sde_skill_words.iloc[:,1] / sde.shape[0] 
+sde_barplot = sns.barplot( x = 0, y = 1,data = sde_skill_words, palette = &#39;Blues_d&#39;)
+sde_barplot.set(xlabel = &#39;&#39;, ylabel = &#39;percentage in SDE posts&#39;)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_50_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;wordcloud = WordCloud(max_words=50,background_color = &#39;white&#39;, width = 2800,height = 2400, max_font_size = 1000, font_path=&amp;quot;/Users/shishengjie/Desktop/cabin-sketch/CabinSketch-Regular.ttf&amp;quot;).generate(&#39;,&#39;.join(sde_filtered_skill))
+plt.figure(figsize=(18,16))
+plt.axis(&#39;off&#39;)
+plt.imshow(wordcloud)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_51_0.png&#34; width=&#34;700px&#34;&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;degree&#34;&gt;Degree&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# degree_requirement
+
+degree_level = [&#39;Master&#39;, &#39; MS&#39;,&#39;M.S&#39;,&#39;Ph.D&#39;,&#39;PhD&#39;, &#39;BS&#39;,&#39;Bachelor&#39;]
+degree_field = [&#39;statist&#39;,&#39;math&#39;,&#39;computer science&#39;,&#39;engineer&#39;,&#39;biolog&#39;, &#39;econ&#39;,&#39;physics&#39;,&#39;chemis&#39;, &#39;bioinformati&#39;, &#39;life science&#39;]
+# &#39;cs&#39; contained in &#39;analytics&#39;, &#39;physics&#39;, 
+bachelor_total = 0; master_total = 0; phd_total = 0;
+for i in ds[&#39;need_for_position&#39;]:
+    master_total = master_total + sum( (x in i) for x in [&#39;Master&#39;, &#39;MS&#39;,&#39;M.S&#39;] ) # &#39;algorithms&#39;, &#39;systems&#39;,&#39;platforms&#39;
+    bachelor_total = bachelor_total + sum((x in i) for x in [&#39;BS&#39;, &#39;Bachelor&#39;])
+    phd_total = phd_total + sum( (x in i) for x in [&#39;PhD&#39;, &#39;Ph.D&#39;,&#39;phd&#39;,&#39;ph.d&#39;])
+print bachelor_total, master_total, phd_total
+
+for k in degree_field:
+    a = sum( k in x for x in ds_needForPosition_list_lower)
+    print (k, a)
+field = [[&#39;statistics&#39;, &#39;math&#39;,&#39;computer science&#39;, &#39;engineering&#39;, &#39;physics&#39;,&#39;life science&#39;,&#39;other&#39;], [49, 37, 30, 22, 11, 10, 3]]
+plt.figure(figsize=(8,6))
+plt.pie(field[1], labels = field[0], autopct=&#39;%1.1f%%&#39;,colors = [&#39;gold&#39;, &#39;yellowgreen&#39;, &#39;lightcoral&#39;, &#39;lightskyblue&#39;,&#39;lightgrey&#39;,&#39;pink&#39;,&#39;darkorange&#39;])
+plt.axis(&#39;equal&#39;)
+plt.title(&#39;Major Dist&#39;)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;0 0 46
+(&#39;statist&#39;, 45)
+(&#39;math&#39;, 32)
+(&#39;computer science&#39;, 25)
+(&#39;engineer&#39;, 21)
+(&#39;biolog&#39;, 5)
+(&#39;econ&#39;, 1)
+(&#39;physics&#39;, 10)
+(&#39;chemis&#39;, 2)
+(&#39;bioinformati&#39;, 4)
+(&#39;life science&#39;, 5)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;../../projects/cybercoders/output_53_1.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The pie chart denotes that &lt;strong&gt;Statistics, Math, Computer Science&lt;/strong&gt; are top three popular degrees that companies are welcome to hire no matter in the Data Science or SDE.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# degree_requirement
+
+degree_level = [&#39;Master&#39;, &#39; MS&#39;,&#39;M.S&#39;,&#39;Ph.D&#39;,&#39;PhD&#39;, &#39;BS&#39;,&#39;Bachelor&#39;]
+degree_field = [&#39;statist&#39;,&#39;math&#39;,&#39;computer science&#39;,&#39;engineer&#39;,&#39;biolog&#39;, &#39;econ&#39;,&#39;physics&#39;,&#39;chemis&#39;, &#39;bioinformati&#39;, &#39;life science&#39;]
+# &#39;cs&#39; contained in &#39;analytics&#39;, &#39;physics&#39;, 
+bachelor_total1 = 0; master_total2 = 0; phd_total3 = 0; a = 0;
+
+count = 0 
+np.array([sum((k in i) for k in [&#39;Master&#39;, &#39;MS&#39;,&#39;M.S&#39;]) for i in sde[&#39;need_for_position&#39;] if not pd.isnull(i)]).sum()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;33
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also, there are 33 job posts specificly denoted that they like or preferred the master degree.&lt;/p&gt;
+
+&lt;p&gt;In conclusion, according to the Cybercoder data, we get the most of employment information of Data Scientist and Software Develpment Engineer. Even though the current salary median of DS is lower than SDE, DS is a real potential job position for our statistic major students. Equited with some program languages like &lt;strong&gt;&amp;ldquo;Python&amp;rdquo;, &amp;ldquo;C&amp;rdquo;&lt;/strong&gt; and our professional statistical analysis experience, we believe that we can be really competitve in the job market.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>SPAM FILTER</title>
+      <link>/projects/spam_detection/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/spam_detection/</guid>
+      <description>&lt;p&gt;You got a spam email! Gmail can always help you filtering spam emails. Do you want to know how it works?
+&lt;/p&gt;
+
+&lt;h3&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;Email detection is one of the most importand applications of Natural Language Processing. The common ways are Hand-coded rules which is quite complicated in processing with low recall rate and supervised learning which includes Naïve Bayes、Logistic regression、Support-vector machines、k-Nearest Neighbors, etc. Here I will use the Naïve Bayes Classifier since it is more straightforward and simpler than other algorithms.&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h3&gt;Algorithm Details&lt;/h3&gt;
+Naïve Bayes is based on bayes rule and bag of words analysis with a very important assumption: tokens appeard in the text are disorderly and independant with each other. The Naïve Bayes Classifier can be explained like this:
+$$P(c|d) = \frac{P(d|c)P(c)}{P(d)}$$ where d represents document and c represents classes. The class c of the given document d is:
+$$
+\begin{split}
+C &amp;= argmax\ P(c|d) \\
+&amp;=argmax\ \frac{P(d|c)P(c)}{P(d)}\\
+&amp;=argmax\ P(d|c)P(c)\\
+&amp;=argmax\ P(t_1,t_2,...,t_n|c)P(c)\\
+&amp;=argmax\ P(t_1|c)P(t_2|c),...,P(t_n|c)P(c) \\
+&amp;=argmax\ logP(t_1|c)+logP(t_2|c)+,...,+logP(t_n|c)+logP(c)
+\end{split}
+$$
+where \(t_1,...,t_n\) are tokens in the given text. \(P(c)\) is the prior probability, \(P(t_1,t_2,...,t_n|c\) is the conditional probability, namely likelihood and P(c|d) is the posterior probability.
+
+
+
+&lt;h3&gt;Training Phase&lt;/h3&gt;
+
+&lt;p&gt;Our training data are emails in the SPAM_trainig folder with the file name like &amp;lsquo;HAM.02281.txt&amp;rsquo; representing ham email and &amp;lsquo;SPAM.02281.txt&amp;rsquo; representing spam email.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import nltk
+import pickle
+import math
+import re
+from collections import Counter
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;1. Load our training files and take a look at the contents&lt;/h4&gt;
+
+&lt;p&gt;ham stores all true emails with the file name like HAM.0123.txt while spam stores all spam emails with the file name like SPAM.0234.txt&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;ham = nltk.corpus.PlaintextCorpusReader(&#39;/Users/Aslan/winter 2017/Lin127/hw2,3/SPAM_training&#39;, &#39;HAM.*.txt&#39;)
+spam = nltk.corpus.PlaintextCorpusReader(&#39;/Users/Aslan/winter 2017/Lin127/hw2,3/SPAM_training&#39;, &#39;SPAM.*.txt&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There are 13545 ham emails and 4912 spam emails in our training dataset.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# number of files in each class
+ham_count = len(ham.fileids())
+spam_count = len(spam.fileids())
+# total number of tokens in each class
+ham_tokens = ham.words()
+spam_tokens = spam.words()
+print(ham_count, spam_count)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;13545 4912
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;2. Build our text classifier&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def get_freq_df(words):
+    &#39;&#39;&#39;Build a nltk frequency table for the token types in each class
+    
+    Args:
+        words(nltk object): a list of tokens
+    
+    Returns:
+        dist_words(nltk FreqDist): frequency table
+    &#39;&#39;&#39;
+    dist_words = nltk.FreqDist(words)
+    return dist_words
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def solver(spam, ham, spam_count, ham_count):
+    &#39;&#39;&#39;build the solver model
+    Args: 
+        spam(nltk object): a list of tokens in spam
+        ham(nltk object): a list of tokens in ham
+    Returns:
+        a dict with two data frames and two counts for each class 
+    &#39;&#39;&#39;
+    df_spam = get_freq_df(spam)
+    df_ham = get_freq_df(ham)
+
+    return {&#39;spam_fd&#39;: df_spam, &#39;ham_fd&#39;: df_ham, 
+            &#39;spam_count&#39;: spam_count, &#39;ham_count&#39;: ham_count}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;3. Save our model into spam.nb for time saving when reusing this code.&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;solver_NB = solver(spam_tokens, ham_tokens, spam_count, ham_count)
+with open(&#39;spam.nb&#39;, &#39;wb&#39;) as f:
+    pickle.dump(solver_NB, f, protocol=pickle.HIGHEST_PROTOCOL)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Testing Phase&lt;/h3&gt;
+
+&lt;h4&gt;1. we reload our classifier model from our hard disk&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;with open(&#39;spam.nb&#39;, &#39;rb&#39;) as f:
+    model = pickle.load(f)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;log_prior_spam/ham represents the prior logrithm probability of spam/ham class.
+we can see that there are, in total,  1284301 tokens in spam training data and 4903935 in ham data.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;log_prior_spam = math.log(model[&#39;spam_count&#39;]/(model[&#39;spam_count&#39;] + model[&#39;ham_count&#39;]))
+log_prior_ham = math.log(model[&#39;ham_count&#39;]/(model[&#39;spam_count&#39;] + model[&#39;ham_count&#39;]))
+spam_n = model[&#39;spam_fd&#39;].N()
+ham_n = model[&#39;ham_fd&#39;].N()
+print(spam_n, ham_n)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;1284301 4903935
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;2. create the likelihood table with add-one-smoothing modification&lt;/h4&gt;
+
+&lt;p&gt;The add-one-smoothing is one of the methods to fix the new word problem. When there are new words which can be found only from one of our training class(spam or ham) in the text files, the posterior probablity could be zero since \(P(new|c) = 0\) for the class that does not include that new word. We don&amp;rsquo;t want our classifier be disturbed by these new words and that is why we should implement this modification here.&lt;/p&gt;
+
+&lt;p&gt;To be more detailed:
+$$P(token|c) = \frac{(number\ of\ the\ given\ token\ in\ class\ c) +1}{(token\ size\ of\ class\ c) + (vocabulary\ size)}$$ where the vocabulary size is the total number of token type in the union of spam and ham training set&lt;/p&gt;
+
+&lt;p&gt;However, add-one-smoothing can&amp;rsquo;t fix the scenario where the new word doesn&amp;rsquo;t show in any traning class. In that case, I just simply omit that word.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Build the vacabulary set on the union of spam and ham training set.
+vocabulary = set(list(model[&#39;ham_fd&#39;].keys()) + list(model[&#39;spam_fd&#39;].keys()))
+vocal_size = len(vocabulary)
+vocal_size
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;101357
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;spam_log_likelihood = {}    # initialize the conditional probablity
+ham_log_likelihood = {}
+# add-one-smoothing
+for token in vocabulary:
+    spam_log_likelihood[token] = math.log((model[&#39;spam_fd&#39;][token] + 1) / (spam_n + vocal_size))
+    ham_log_likelihood[token] = math.log((model[&#39;ham_fd&#39;][token] + 1) / (ham_n + vocal_size))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def spam_detection(file, ham_log_likelihood, spam_log_likelihood, 
+                   log_prior_spam, log_prior_ham, vocabulary):
+    &#39;&#39;&#39; classify the given file as a binary outcome(spam or ham)
+    Args:
+        file: file name(eg.&#39;test.0123.txt&#39;)
+        ham(spam)_log_likelihood: likelihood table after taking add-one-smoothing and logrithm
+        log_prior_spam(ham): prior probability in log type
+        vocabulary: token types in the union of spam and ham training dataset.
+    Returns:
+        print file name with &#39;SPAM&#39; or &#39;HAM&#39;
+    &#39;&#39;&#39;       
+    token_ls = dev.words(fileids=file)
+    log_posterior_spam = log_prior_spam
+    log_posterior_ham = log_prior_ham
+    
+    for token in token_ls:
+        if not token in vocabulary:
+            continue
+        log_posterior_spam += spam_log_likelihood[token]
+        log_posterior_ham += ham_log_likelihood[token]
+    
+    if log_posterior_spam &amp;gt; log_posterior_ham:
+        print(file, &#39;SPAM&#39;)
+    else:
+        print(file, &#39;HAM&#39;)
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;3. Run the classifier on our test data&lt;/h4&gt;
+
+&lt;p&gt;I wrote the code above in a more decent way in a script file called nbtest.py and run the shell command:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;python3 nbtest.py &amp;gt; SPAM_dev_predictions.txt&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Then we load the result into variable dev by nltk&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;dev = nltk.corpus.PlaintextCorpusReader(&#39;/Users/Aslan/winter 2017/Lin127/hw2,3/&#39;, &#39;SPAM_dev_predictions.txt&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Model Evaluation Phase&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;file_ls = dev.raw().strip().split(&#39;\n&#39;)
+confusion = [re.search(r&#39;(HAM|SPAM)\..*(HAM|SPAM)&#39;, i).group(1) + &#39; &#39; +
+             re.search(r&#39;(HAM|SPAM)\..*(HAM|SPAM)&#39;, i).group(2)
+             for i in file_ls]
+file_ls[:10]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;[&#39;HAM.00039.txt HAM&#39;,
+ &#39;HAM.00045.txt HAM&#39;,
+ &#39;HAM.00064.txt HAM&#39;,
+ &#39;HAM.00091.txt HAM&#39;,
+ &#39;HAM.00098.txt HAM&#39;,
+ &#39;HAM.00137.txt HAM&#39;,
+ &#39;HAM.00143.txt HAM&#39;,
+ &#39;HAM.00146.txt HAM&#39;,
+ &#39;HAM.00153.txt HAM&#39;,
+ &#39;HAM.00205.txt HAM&#39;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;Counter(confusion)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Counter({&#39;HAM HAM&#39;: 986, &#39;HAM SPAM&#39;: 14, &#39;SPAM HAM&#39;: 14, &#39;SPAM SPAM&#39;: 349})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Our test set has 1000 ham and 363 spam
+Therefore:&lt;/p&gt;
+
+&lt;p&gt;\(recall(HAM) = \frac{986}{1000} = 98.6\% \)&lt;/p&gt;
+
+&lt;p&gt;\(recall(SPAM) = \frac{349}{363} = 96.1\% \)&lt;/p&gt;
+
+&lt;p&gt;\(precision(HAM) = \frac{986}{986+14} = 98.6\% \)&lt;/p&gt;
+
+&lt;p&gt;\(precision(SPAM) = \frac{349}{349+14} = 96.1\% \)&lt;/p&gt;
+
+&lt;p&gt;where \(t_1,&amp;hellip;,t_n\) are tokens in the given text. P(c) is the prior probability, \(P(t_1,t_2,&amp;hellip;,t_n|c\) is the conditional probability, namely likelihood and P(c|d) is the posterior probability.&lt;/p&gt;
+
+&lt;p&gt;The recall and precision for both class are pretty high which indicate that my classifier is powerful enough.&lt;/p&gt;
+
+&lt;h3&gt;Next Steps to be done&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Try other smoothing methods&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Find a way to deal with the new words problem which I omitted this time&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
