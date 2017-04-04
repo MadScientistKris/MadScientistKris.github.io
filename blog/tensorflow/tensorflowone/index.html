@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>TensorFlow Self-Learning Note 1</title>
+<meta name="description" content="Describe your website">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="all,follow">
+<meta name="googlebot" content="index,follow,snippet,archive">
+<link rel="stylesheet" href="../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,700,400italic">
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../css/owl.carousel.css">
+<link rel="stylesheet" href="../../../css/owl.theme.css">
+<link rel="stylesheet" href="../../../css/github-gist.css">
+<script src="../../../js/highlight.pack.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+  <link href="../../../css/style.default.css" rel="stylesheet" id="theme-stylesheet">
+
+
+<link href="../../../css/custom.css" rel="stylesheet">
+<link rel="shortcut icon" href="../../../img/favicon.png">
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-93971472-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script></head>
+<body>
+  <div id="all">
+      <div class="container-fluid">
+          <div class="row row-offcanvas row-offcanvas-left">
+              
+<div id="sidebar" class="col-sb-fixedpos col-xs-6 col-sm-4 col-md-3 sidebar-offcanvas">
+  <div class="sidebar-content">
+    <h1 class="sidebar-heading"><a href="../../../">Yingxi Yu</a></h1>
+
+    <ul class="sidebar-menu">
+      
+      
+        <li><a href="../../../">Home</a></li>
+      
+        <li><a href="../../../about/">About</a></li>
+      
+        <li><a href="../../../projects/">Projects</a></li>
+      
+        <li><a href="../../../blog/">Blog</a></li>
+      
+        <li><a href="../../../tags/">Tags</a></li>
+      
+        <li><a href="../../../contact/">Get in touch</a></li>
+      
+
+       
+
+<div class="panel panel-default sidebar-menu">
+
+   
+
+    <div class="panel-body">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" role="search">
+            <div class="input-group">
+                <input type="search" name="q" results="0" class="form-control" placeholder="Search">
+                <input type="hidden" name="q" value="site:/">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-template-main"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+ 
+
+      
+
+ 
+
+      
+ 
+
+    </ul>
+    <p class="social">
+  
+  <a href="https://www.facebook.com/yingxi.yu.3" data-animate-hover="pulse" class="external facebook">
+    <i class="fa fa-facebook"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="mailto:yyxkrisrt@gmail.com" data-animate-hover="pulse" class="email">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://www.linkedin.com/in/yuyingxi" data-animate-hover="pulse">
+    <i class="fa fa-linkedin"></i>
+  </a>
+  
+  
+  
+<a href="https://github.com/MadScientistKris">
+  <i class="fa fa-github"></i>
+</a>
+
+</p>
+
+
+    <div class="copyright">
+      <p class="credit">
+        
+          &copy;2017 Yingxi Yu, credit to vincentz
+        
+        | Template by <a href="https://bootstrapious.com/free-templates" class="external">Bootstrapious.com</a>
+
+&amp; ported to Hugo by <a href="https://github.com/kishaningithub">Kishan B</a>
+
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<div class="col-xs-12 col-sm-8 col-md-9 content-column white-background col-main-fixedpos">
+  <div class="small-navbar visible-xs">
+  <button type="button" data-toggle="offcanvas" class="btn btn-ghost pull-left"> <i class="fa fa-align-left"> </i>Menu</button>
+  <h1 class="small-navbar-heading"><a href="../../../">Yingxi Yu</a></h1>
+</div>
+
+
+            <div class="row">
+                  <div class="col-sm-4">
+                    <div class="image">
+                      <img src="../../../img/portfolio/tensorflow2.jpeg" class="img-responsive" alt="">
+                    </div>
+                  </div>
+
+                  <div class="col-md-8">
+                      <h2>TensorFlow Self-Learning Note 1</h2>
+                          <p class="author-category">
+                            Kris Yu
+                          </p>
+
+                          <p class="date-comments">
+                          <i class="fa fa-calendar-o"></i> March 31, 2017
+                          </p>
+
+                          <ul class="tags-cloud">
+                          
+                             <li><a href="../../../tags/tensorflow"><i class="fa fa-tags"></i> tensorflow</a></li>
+                          
+                             <li><a href="../../../tags/python"><i class="fa fa-tags"></i> python</a></li>
+                          
+                             <li><a href="../../../tags/machine-learning"><i class="fa fa-tags"></i> machine-learning</a></li>
+                          
+                          </ul>
+                   
+                            
+
+                          
+                  
+                      </div>
+                    </div>
+                  </br>
+
+<div class="row">
+   <div class="content-column-content">
+          <div class="col-lg-8">
+
+
+
+<ul>
+<li><a href="#introduction">Introduction</a>
+
+<ul>
+<li><a href="#what-is-a-data-flow-graph">What is a Data Flow Graph</a></li>
+<li><a href="#features-of-tensorFlow">Features of TensorFlow</a></li>
+</ul></li>
+<li><a href="#basis">Basis</a>
+
+<ul>
+<li><a href="#graph-computing">Graph Computing</a><br />
+
+<ul>
+<li><a href="#create-a-graph">Create a Graph</a></li>
+<li><a href="#run-a-session">Run a Session</a></li>
+</ul></li>
+<li><a href="#working-in-interactive-environment">Working in Interactive Environment</a></li>
+<li><a href="#variables">Variables</a></li>
+<li><a href="#fetches">Fetches</a></li>
+<li><a href="#feeds">Feeds</a></li>
+</ul></li>
+<li><a href="#example-of-linear-regression">Example of Linear Regression</a></li>
+<li><a href="#mnist-handwritten-digits-recognition">MNIST Handwritten Digits Recognition</a>
+
+<ul>
+<li><a href="#model-training">Model Training</a></li>
+<li><a href="#model-evaluation">Model Evaluation</a>
+<br /></li>
+</ul></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p><a href="https://github.com/tensorflow/tensorflow">TensorFlow</a> is an open source software library for numerical computation using data flow graphs. Nodes in the graph represent mathematical operations, while the graph edges represent the multidimensional data arrays (tensors) that flow between them. This flexible architecture lets you deploy computation to one or more CPUs or GPUs in a desktop, server, or mobile device without rewriting code. TensorFlow also includes TensorBoard, a data visualization toolkit.</p>
+
+<p>TensorFlow was originally developed by researchers and engineers working on the Google Brain team within Google&rsquo;s Machine Intelligence research organization for the purposes of conducting machine learning and deep neural networks research. The system is general enough to be applicable in a wide variety of other domains, as well.(cited from github)</p>
+
+<h3 id="what-is-a-data-flow-graph">What is a Data Flow Graph</h3>
+
+<p>A data-flow graph (DFG) is a graph which represents a data dependancies between a number of operations. The nodes in the graph represent operations and edges connect nodes together by passing tensors. To conclude, tensors flowing in the DFG is TensorFlow.</p>
+
+<h3 id="features-of-tensorflow">Features of TensorFlow</h3>
+
+<ol>
+<li><p>Flexibility</p>
+
+<p>TensorFlow is not only a neural network framwork. You can do whatever you want with the power of TensorFlow if you are able to make the calculations in a data flow graph</p></li>
+
+<li><p>Portability</p>
+
+<p>TensorFlow is able to work on any devices with CPU or GPU. You can focus on your idea without concerning about hardware environment</p></li>
+
+<li><p>Program Language Support</p>
+
+<p>TensorFlow currently support Python and C++</p></li>
+
+<li><p>Efficiency</p>
+
+<p>TensorFlow makes full use of hardware resources and maximizes computing performance</p></li>
+</ol>
+
+<h2 id="basis">Basis</h2>
+
+<ul>
+<li>Make all calculations as data flow graph</li>
+<li>Work with the graph by running a <strong>Session</strong></li>
+<li>Present data as <strong>tensors</strong></li>
+<li>Use <strong>Variables</strong> to keep information of status</li>
+<li>Fill in data and obtain the result of any operations with <strong>feeds</strong> and <strong>fetches</strong></li>
+</ul>
+
+<p>Each node in the graph is called an <strong>op</strong>(short for operation). An ops uses 0 or more <strong>tensors</strong> and generates 0 or more <strong>tensors</strong> with some calculations. A <strong>tensor</strong> is a multi-dimensional array. You can take a graph as a 4 dimensional array [batch, height, witdth, channels] where all elements in the array are floats.</p>
+
+<p>Session puts all ops in the graph to CPUs or GPUs, then execute them with methods and return tensors finally. Tensor in Python is a numpy ndarray objects while in C++ is tensorflow::Tensor</p>
+
+<h3 id="graph-computing">Graph Computing</h3>
+
+<p>You can take creating a graph as construct a neural network while executing the session as training the network.</p>
+
+<h4 id="create-a-graph">Create a Graph</h4>
+
+<p>In TensorFlow, <strong>Constant</strong> is a kind of <strong>op</strong> without any input but you can make it a as a input of other ops. TensorFlow module in Python has a default graph so that you can directly generate ops on it. More details about <a href="https://www.tensorflow.org/api_guides/python/framework#Graph">Graph Class</a></p>
+
+<pre><code class="language-python">import tensorflow as tf
+import numpy as np
+from PIL import Image
+</code></pre>
+
+<pre><code class="language-python"># Create a Constant op that produces a 1x2 matrix.  The op is
+# added as a node to the default graph.
+#
+# The value returned by the constructor represents the output
+# of the Constant op.
+matrix1 = tf.constant([[3., 3.]])
+
+# Create another Constant that produces a 2x1 matrix.
+matrix2 = tf.constant([[2.],[2.]])
+
+# Create a Matmul op that takes 'matrix1' and 'matrix2' as inputs.
+# The returned value, 'product', represents the result of the matrix
+# multiplication.
+product = tf.matmul(matrix1, matrix2)
+</code></pre>
+
+<p>Now there are 3 ops in the default graph: 2 <strong>Constant( ) ops</strong> and 1 <strong>matmul( ) op</strong>. In order to get the result of the matrices multiplication, we need a session the run the computings.</p>
+
+<h4 id="run-a-session">Run a Session</h4>
+
+<p>Find more details at <a href="https://www.tensorflow.org/api_guides/python/client#session-management">Session Class</a></p>
+
+<pre><code class="language-python"># Launch the default graph.
+sess = tf.Session()
+
+# To run the matmul op we call the session 'run()' method, passing 'product'
+# which represents the output of the matmul op.  This indicates to the call
+# that we want to get the output of the matmul op back.
+#
+# All inputs needed by the op are run automatically by the session.  They
+# typically are run in parallel.
+#
+# The call 'run(product)' thus causes the execution of threes ops in the
+# graph: the two constants and matmul.
+#
+# The output of the op is returned in 'result' as a numpy `ndarray` object.
+result = sess.run(product)
+print(result)
+
+# Close the Session when we're done.
+sess.close()
+</code></pre>
+
+<pre><code>[[ 12.]]
+</code></pre>
+
+<p>Do not forget to close the session in the end. However, you may want to use <strong>with</strong> to avoid the close</p>
+
+<pre><code class="language-python">with tf.Session() as sess:
+  result = sess.run([product])
+  print(result)
+</code></pre>
+
+<pre><code>[array([[ 12.]], dtype=float32)]
+</code></pre>
+
+<p>The computings are all on CPUs and GPUs. TensorFlow will use the first GPU by default if you are using GPU for executing. If you would like to work on other GPUs:
+with tf.Session() as sess:
+  with tf.device(&ldquo;/gpu:1&rdquo;):
+    matrix1 = tf.constant([[3., 3.]])
+    matrix2 = tf.constant([[2.],[2.]])
+    product = tf.matmul(matrix1, matrix2)
+    &hellip;
+Names for Devices:</p>
+
+<ul>
+<li>&rdquo;/cpu:0&rdquo;： Your CPU</li>
+<li>&rdquo;/gpu:0&rdquo;： Your first GPU</li>
+<li>&rdquo;/gpu:1&rdquo;： Your second GPU</li>
+</ul>
+
+<p>Documentation of <a href="https://www.tensorflow.org/tutorials/using_gpu">GPU</a> using</p>
+
+<h3 id="working-in-interactive-environment">Working in Interactive Environment</h3>
+
+<p>We were using Session and Session.run() to execute the graph computing. However, you can use InteractiveSession class and methods like Tensor.eval(), Operation.run() in interactive environments such IPython and Jupyter Notebook.</p>
+
+<pre><code class="language-python"># Enter an interactive TensorFlow Session.
+sess = tf.InteractiveSession()
+
+x = tf.Variable([1.0, 2.0])
+a = tf.constant([3.0, 3.0])
+
+# Initialize 'x' using the run() method of its initializer op.
+x.initializer.run()
+
+# Add an op to subtract 'a' from 'x'.  Run it and print the result
+sub = tf.sub(x, a)
+print(sub.eval())
+
+# Close the Session when we're done.
+sess.close()
+</code></pre>
+
+<pre><code>[-2. -1.]
+</code></pre>
+
+<h3 id="variables">Variables</h3>
+
+<p>Variables will keep their information of status while running a session. They are usually used to represent parameters which are need to be trained with iterations in an algorithm since they can memorize the status of each iteration. The variable in the following example take the role as a simple counter.</p>
+
+<pre><code class="language-python"># Create a Variable, that will be initialized to the scalar value 0.
+state = tf.Variable(0, name=&quot;counter&quot;)
+
+# Create an Op to add one to `state`.
+
+one = tf.constant(1)
+new_value = tf.add(state, one)
+update = tf.assign(state, new_value)
+
+# Variables must be initialized by running an `init` Op after having 
+# launched the graph.  We first have to add the `init` Op to the graph.
+init_op = tf.global_variables_initializer()
+
+# Launch the graph and run the ops.
+with tf.Session() as sess:
+    # run the init op
+    sess.run(init_op)
+    # Print the initial value of 'state'
+    print(sess.run(state))
+    # Run the op that updates 'state' and print 'state'.
+    for i in range(3):
+        sess.run(update)
+        print(sess.run(state))
+    
+</code></pre>
+
+<pre><code>0
+1
+2
+3
+</code></pre>
+
+<h3 id="fetches">Fetches</h3>
+
+<p>To fetch the result of an op, you can <strong>print</strong> the status after executing <strong>sess.run()</strong></p>
+
+<pre><code class="language-python">input1 = tf.constant(3.0)
+input2 = tf.constant(2.0)
+input3 = tf.constant(5.0)
+intermd = tf.add(input3, input2)
+mul = tf.mul(input1, intermd)
+
+with tf.Session() as sess:
+    result = sess.run([mul, intermd])
+    print(result)
+</code></pre>
+
+<pre><code>[21.0, 7.0]
+</code></pre>
+
+<h3 id="feeds">Feeds</h3>
+
+<p>First create a placeholder, then feed it with data</p>
+
+<pre><code class="language-python">input1 = tf.placeholder(tf.float32)
+input2 = tf.placeholder(tf.float32)
+output = tf.mul(input1, input2)
+
+with tf.Session() as sess:
+  print(sess.run([output], feed_dict={input1:[7.], input2:[2.]}))
+</code></pre>
+
+<pre><code>[array([ 14.], dtype=float32)]
+</code></pre>
+
+<p>Not feeding a placehold will throw out errors.</p>
+
+<h2 id="example-of-linear-regression">Example of Linear Regression</h2>
+
+<pre><code class="language-python"># Randomly generate 100 pairs of (x, y) where y = x * 0.1 + 0.3
+x_data = np.random.rand(100).astype(&quot;float32&quot;)
+y_data = x_data * 0.1 + 0.3
+
+# Initialize w and b with variables
+W = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
+b = tf.Variable(tf.zeros([1]))
+y = W * x_data + b    # here + and * has been overloaded for tf.add() and tf.mul()
+
+# Least Square Error
+loss = tf.reduce_mean(tf.square(y - y_data))
+optimizer = tf.train.GradientDescentOptimizer(0.5)
+train = optimizer.minimize(loss)
+
+# Initialize the variables in tensorflow
+init = tf.global_variables_initializer()
+
+# Run the session
+with tf.Session() as sess:
+    sess.run(init)
+    # monitor the changes of coefficients every 20 iterations
+    for step in range(201):
+        sess.run(train)
+        if step % 20 == 0:
+            print(step, sess.run(W), sess.run(b))
+</code></pre>
+
+<pre><code>0 [-0.21695098] [ 0.66673416]
+20 [-0.00646714] [ 0.35819602]
+40 [ 0.07154677] [ 0.31555283]
+60 [ 0.09239592] [ 0.30415648]
+80 [ 0.09796781] [ 0.30111083]
+100 [ 0.09945691] [ 0.30029687]
+120 [ 0.09985484] [ 0.30007935]
+140 [ 0.09996121] [ 0.3000212]
+160 [ 0.09998964] [ 0.30000567]
+180 [ 0.09999724] [ 0.30000153]
+200 [ 0.09999929] [ 0.3000004]
+</code></pre>
+
+<h2 id="mnist-handwritten-digits-recognition">MNIST Handwritten Digits Recognition</h2>
+
+<p>MNIST is a dataset of simple handwritten digits. You can get access to the data <a href="http://yann.lecun.com/exdb/mnist/">here</a>. There are 55,000 observations in training set and 10,000 in test set. Each 28x28 picture is flatten to an array of length 784 and the response is from 0 to 9. However, MNIST is the sample data set of tensorFlow in Python. It is quite easy to get the data by two lines of code:</p>
+
+<pre><code class="language-python">from tensorflow.examples.tutorials.mnist import input_data
+mnist = input_data.read_data_sets(&quot;MNIST_data/&quot;, one_hot=True)
+</code></pre>
+
+<pre><code>Extracting MNIST_data/train-images-idx3-ubyte.gz
+Extracting MNIST_data/train-labels-idx1-ubyte.gz
+Extracting MNIST_data/t10k-images-idx3-ubyte.gz
+Extracting MNIST_data/t10k-labels-idx1-ubyte.gz
+</code></pre>
+
+<pre><code class="language-python">try_x,try_y =mnist.train.next_batch(1)
+Image.fromarray(np.uint8(try_x.reshape(28,28)*255)).resize((300,300),Image.ANTIALIAS)
+</code></pre>
+
+<p><img src="../../../blog/tensorflow/output_30_0.png" alt="png" /></p>
+
+<p>Since this is only an entry level multiclass classification, I will not discuss the details about the algorithm here but focus on the implementation with TensorFlow.</p>
+
+<pre><code class="language-python">x = tf.placeholder(tf.float32, [None, 784])
+</code></pre>
+
+<p>Here x is about a specific number but a placeholder. We use [None, 784] to represent the whole MNIST data set where None could be anything.</p>
+
+<p>We use variables to represent weights and bias which are changeable</p>
+
+<pre><code class="language-python">W = tf.Variable(tf.zeros([784, 10]))
+b = tf.Variable(tf.zeros([10]))
+</code></pre>
+
+<p>W and b are initialized with 0. W is 784x10 since the response is one hot vector and the bias has length 10.</p>
+
+<p>Implement <strong>softmax regression</strong> only needs one line of code</p>
+
+<pre><code class="language-python">y = tf.nn.softmax(tf.matmul(x, W) + b)
+</code></pre>
+
+<h3 id="model-training">Model Training</h3>
+
+<p>Loss function is one of the essential parts of a machine learning algorithm and it indicates the goodness of training. Here we use cross-entropy as our loss function. Cross-entropy comes from information theory but not is applied in many other fields. Its defination is:
+$$H_y^\prime(y)=-\sum_iy_i^\prime\log(y_i)$$ where y is the predicted probability and \(y^\prime\) is the true values. You can find more detials about cross-entropy <a href="http://colah.github.io/posts/2015-09-Visual-Information/">here</a>.</p>
+
+<p>In order to implement cross-entropy, we set a placeholder to store the true responses.</p>
+
+<pre><code class="language-python">y_ = tf.placeholder(tf.float32, [None, 10])
+</code></pre>
+
+<p>And then define the cross-entropy. This is not restricted to only one picture. It can be the whole data set.</p>
+
+<pre><code class="language-python">cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+#cross_entropy = -tf.reduce_sum(y_ * tf.log(y))
+</code></pre>
+
+<p>TensorFlow automatically uses back propagation to modify the parameters for the purpose of minizing the loss. The last thing you need to set is choosing a algorithm for minizing the loss. Here we select gradient descent. TensorFlow also offers other <a href="https://www.tensorflow.org/api_guides/python/train#Optimizers">optimization methods</a></p>
+
+<pre><code class="language-python">train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
+</code></pre>
+
+<pre><code class="language-python"># Initialize the variables before training
+init = tf.global_variables_initializer()
+</code></pre>
+
+<h4 id="model-evaluation">Model Evaluation</h4>
+
+<p>We use <strong>tf.argmax()</strong> to predict the label and <strong>tf.equal()</strong> to find whether the predictions matche the true labels. correct_prediction is a list of boolean values. For example [True, False, True, True]. One can use <strong>tf.cast()</strong> to convert it into [1, 0, 1, 1] and the accuracy is 0.75</p>
+
+<pre><code class="language-python"># Start a session
+sess = tf.Session()
+# Initialize the variables
+sess.run(init) 
+# Train the model with 1000 as the maximum iterations
+for i in range(1000):
+    batch_xs, batch_ys = mnist.train.next_batch(10)
+    sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
+
+# Model Evaluation.
+correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+print(&quot;Accuarcy on Test-dataset: &quot;, sess.run(accuracy, \
+                    feed_dict={x: mnist.test.images, y_: mnist.test.labels}))
+
+sess.close()
+</code></pre>
+
+<pre><code>Accuarcy on Test-dataset:  0.8688
+</code></pre>
+
+<p>Softmax regression is too simple to get an ideal result. Here our result is around 0.88 while it can reach 0.97 by some simple optimization. Nowadays, the best accuracy is 99.7%.</p>
+      
+       </div>
+     </div>
+   </div>
+
+
+
+
+
+        <a href="#" class="back-to-top">
+        <i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i>
+
+        </a>
+
+         <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'yyx';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+   
+
+          </div>
+      </div>
+  </div>
+  <script src="../../../js/jquery.min.js"></script>
+<script src="../../../js/bootstrap.min.js"></script>
+<script src="../../../js/jquery.cookie.js"> </script>
+<script src="../../../js/ekko-lightbox.js"></script>
+<script src="../../../js/jquery.scrollTo.min.js"></script>
+<script src="../../../js/masonry.pkgd.min.js"></script>
+<script src="../../../js/imagesloaded.pkgd.min.js"></script>
+<script src="../../../js/owl.carousel.min.js"></script>
+<script src="../../../js/front.js"></script>
+<script src="../../../js/backtotop.js"></script> 
+
+</body>
+</html>

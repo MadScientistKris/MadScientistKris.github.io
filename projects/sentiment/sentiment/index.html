@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Sentiment Analysis on Twitter</title>
+<meta name="description" content="Describe your website">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="all,follow">
+<meta name="googlebot" content="index,follow,snippet,archive">
+<link rel="stylesheet" href="../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,700,400italic">
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../css/owl.carousel.css">
+<link rel="stylesheet" href="../../../css/owl.theme.css">
+<link rel="stylesheet" href="../../../css/github-gist.css">
+<script src="../../../js/highlight.pack.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+  <link href="../../../css/style.default.css" rel="stylesheet" id="theme-stylesheet">
+
+
+<link href="../../../css/custom.css" rel="stylesheet">
+<link rel="shortcut icon" href="../../../img/favicon.png">
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-93971472-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script></head>
+<body>
+  <div id="all">
+      <div class="container-fluid">
+          <div class="row row-offcanvas row-offcanvas-left">
+              
+<div id="sidebar" class="col-sb-fixedpos col-xs-6 col-sm-4 col-md-3 sidebar-offcanvas">
+  <div class="sidebar-content">
+    <h1 class="sidebar-heading"><a href="../../../">Yingxi Yu</a></h1>
+
+    <ul class="sidebar-menu">
+      
+      
+        <li><a href="../../../">Home</a></li>
+      
+        <li><a href="../../../about/">About</a></li>
+      
+        <li><a href="../../../projects/">Projects</a></li>
+      
+        <li><a href="../../../blog/">Blog</a></li>
+      
+        <li><a href="../../../tags/">Tags</a></li>
+      
+        <li><a href="../../../contact/">Get in touch</a></li>
+      
+
+       
+
+<div class="panel panel-default sidebar-menu">
+
+   
+
+    <div class="panel-body">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" role="search">
+            <div class="input-group">
+                <input type="search" name="q" results="0" class="form-control" placeholder="Search">
+                <input type="hidden" name="q" value="site:/">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-template-main"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+ 
+
+      
+
+ 
+
+      
+ 
+
+    </ul>
+    <p class="social">
+  
+  <a href="https://www.facebook.com/yingxi.yu.3" data-animate-hover="pulse" class="external facebook">
+    <i class="fa fa-facebook"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="mailto:yyxkrisrt@gmail.com" data-animate-hover="pulse" class="email">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://www.linkedin.com/in/yuyingxi" data-animate-hover="pulse">
+    <i class="fa fa-linkedin"></i>
+  </a>
+  
+  
+  
+<a href="https://github.com/MadScientistKris">
+  <i class="fa fa-github"></i>
+</a>
+
+</p>
+
+
+    <div class="copyright">
+      <p class="credit">
+        
+          &copy;2017 Yingxi Yu, credit to vincentz
+        
+        | Template by <a href="https://bootstrapious.com/free-templates" class="external">Bootstrapious.com</a>
+
+&amp; ported to Hugo by <a href="https://github.com/kishaningithub">Kishan B</a>
+
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<div class="col-xs-12 col-sm-8 col-md-9 content-column white-background col-main-fixedpos">
+  <div class="small-navbar visible-xs">
+  <button type="button" data-toggle="offcanvas" class="btn btn-ghost pull-left"> <i class="fa fa-align-left"> </i>Menu</button>
+  <h1 class="small-navbar-heading"><a href="../../../">Yingxi Yu</a></h1>
+</div>
+
+
+            <div class="row">
+                  <div class="col-sm-4">
+                    <div class="image">
+                      <img src="../../../img/portfolio/sentiment.jpg" class="img-responsive" alt="">
+                    </div>
+                  </div>
+
+                  <div class="col-md-8">
+                      <h2>Sentiment Analysis on Twitter</h2>
+                          <p class="author-category">
+                            Kris Yu
+                          </p>
+
+                          <p class="date-comments">
+                          <i class="fa fa-calendar-o"></i> March 10, 2017
+                          </p>
+
+                          <ul class="tags-cloud">
+                          
+                             <li><a href="../../../tags/nlp"><i class="fa fa-tags"></i> NLP</a></li>
+                          
+                             <li><a href="../../../tags/python"><i class="fa fa-tags"></i> Python</a></li>
+                          
+                             <li><a href="../../../tags/machine-learning"><i class="fa fa-tags"></i> machine-learning</a></li>
+                          
+                          </ul>
+                   
+                            
+
+                          
+                  
+                      </div>
+                    </div>
+                  </br>
+
+<div class="row">
+   <div class="content-column-content">
+          <div class="col-lg-8">
+
+
+
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#material">Material</a>
+
+<ul>
+<li><a href="#data-source">Data Source</a></li>
+<li><a href="#challenges">Challenges</a></li>
+</ul></li>
+<li><a href="#methodologies">Methodologies</a>
+
+<ul>
+<li><a href="#preprocessing">Preprocessing</a>
+
+<ul>
+<li><a href="#emoticons">Emoticons</a></li>
+<li><a href="#hashtags">Hashtags</a></li>
+<li><a href="#handles">Handles</a></li>
+<li><a href="#urls">URLs</a></li>
+<li><a href="#elongated-words">Elongated Words</a></li>
+<li><a href="#negation">Negation</a></li>
+</ul></li>
+<li><a href="#stop-words">Stop Words</a></li>
+<li><a href="#stem">Stem</a></li>
+<li><a href="#bag-of-words-model">Bag-of-Words Model</a></li>
+<li><a href="#tf-idf-transformation">Tf-idf Transformation</a></li>
+<li><a href="#annotation">Annotation</a></li>
+<li><a href="#machine-learning-models">Machine Learning Models</a>
+
+<ul>
+<li><a href="#naive-bayes">Naive Bayes</a><br /></li>
+<li><a href="#logistic-regression">Logistic Regression</a></li>
+<li><a href="#svm">SVM</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#result">Result</a></li>
+<li><a href="#summary-and-future">Summary and Future</a></li>
+<li><a href="#a-small-sample-of-code">A Small Sample of Code</a></li>
+</ul>
+
+<h2 id="abstract">Abstract</h2>
+
+<p>We perform sentimental analysis (classification) on 400000 tweets from twitter. Our baseline model is multinomial naive bayes classifier. Then we try to improve the classifier not only by introducing algorithms with higher performance on large scale datasets such as logistic regression and support vector machine but also on linguistic level like n-gram, emoji analysis and annotation.</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Sentiment analysis, also called opinion mining, is the process of using the technique of natural language processing, text analysis, computational linguistics to determine the emotional tone or the attitude that a writer or a speaker express towards some entity. As millions of text are generated on the Internet everyday, the application of sentiment analysis becomes more powerful and broad. For example, social media monitoring allows us to gain an overview of the wider public opinion behind certain topics, and the sentiment analysis for customers review delivers the satisfaction metric to the company, which makes it possible for them to improve their products and service. It also has been applied widely in the field of market where it can be applied to forecast market movement based on news, blogs and social media sentiment. In our project, we combine the technique of text analysis and machine learning to perform sentiment classification on the twitter sentiment corpus.</p>
+
+<h2 id="material">Material</h2>
+
+<h3 id="data-source">Data Source</h3>
+
+<p>We choose <a href="http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/">Twitter Sentiment Analysis Dataset</a> as our training and test data where the data sources are University of Michigan Sentiment Analysis competition on Kaggle and Twitter Sentiment Corpus by Niek Sanders. The reason why we use this dataset is that it contains 1,578,627 classified tweets from sentimental annotation which is huge enough for model building and hyperparameter tuning. Ibrahim Naji who is the author of the blog where we got the data has tried simple Naive Bayesian classification algorithm and the result were 75% which is a good baseline for us to compare and improve.</p>
+
+<h3 id="challenges">Challenges</h3>
+
+<ul>
+<li>Tweets are always unstructured</li>
+<li>None vocabulary word such as emoji and emoticon.</li>
+<li>Lexical variation such as tmrw representing tomorrow,</li>
+</ul>
+
+<h2 id="methodologies">Methodologies</h2>
+
+<p>As we all know, tweet has 140-character count limitations so they are different from those documentations that have no length limits. On top of that, unlike the usual text documentation, the tweet message has its own unique features, such as the prevalent usage of emoticons and elongated words (eg. goooood), which distinguishes itself from other text genres.  Hence it is important to standardize the text and remove noise information through some pre-processing steps.</p>
+
+<h3 id="preprocessing">Preprocessing</h3>
+
+<h4 id="emoticons">Emoticons</h4>
+
+<p>Emoticons are used broadly throughout the Internet. However, the default setting of tokenization of nltk will treat each individual punctuation to be a token and therefore decompose the emoticons. So the first step is to identify the emoticons in each text and transform them to a single word. However this uniform transformation for each emoticon has such disadvantage that it ignores the ambiguity of emoticons. For example, the smiley face &ldquo;:)&rdquo; can have multiple meanings, either expressing happiness or just used by people to soften the tone. But this is the best solution we have come up with so far therefore we accept this consequence of ambiguity.</p>
+
+<h4 id="hashtags">Hashtags</h4>
+
+<p>A hashtag is a word or an un-spaced phrase prefixed with the hash symbol (#), which is used to indicate the topics. It is uncertain whether or not the hashtags contain sentiment information and it is also difficult to tokenize since often times phrase in a hashtag is un-spaced. Thus, we decide to uniformly replace every hashtag by a pattern &ldquo;HASH_(whatever in the hashtag)&rdquo;</p>
+
+<h4 id="handles">Handles</h4>
+
+<p>Handles are used to direct the twitter towards other users by writing their usernames preceded by ‘@’. No transformation is needed since usernames can be directly seperated by &ldquo;@&rdquo; and treated as proper nouns.</p>
+
+<h4 id="urls">URLs</h4>
+
+<p>Links are very common in the twitters for sharing assorted resources. Each link is replaced by a word &ldquo;URL&rdquo; and treated as a proper noun.</p>
+
+<h4 id="elongated-words">Elongated Words</h4>
+
+<p>People tend to use repeating characters in colloquial language, which delivers certain sentiment. But the problem is that some elongated words might derive from the same word but have different numbers of repeating characters. Therefore, we used regular expression to replace characters repeating more than twice as two characters.</p>
+
+<h4 id="negation">Negation</h4>
+
+<p>The occurrence of negation can completely change the sentiment of the whole sentence. There are several ways to handle negation, one of which is to suffix &ldquo;_NEG&rdquo; to all the words that appear after the negation words until the punctuation. In addition, we also learned that negation handling is way more complicated than that and people have done some research regrading detection of explicit negation cues and the scope of negation of these words. However, our analysis showed that &ldquo;_NEG&rdquo; appending can only improve the prediction accuracy by 0.5% compared to the unigram baseline model. Moreover, later experiment indicates that the combination of unigram, bigram and trigram can significantly improve the prediction performance and we assume that such N-gram model can capture the negation characteristics. Computational capabilities are also important and we discovered such modification requires changes for some default behavior of tokenizer (we use scikit-learn in python) and notably slowed down the computation. So we decided not to handle the negations.</p>
+
+<h3 id="stop-words">Stop Words</h3>
+
+<p>Stop words usually refer to the most common words in a language, such as &ldquo;a&rdquo;, &ldquo;the&rdquo; and &ldquo;is&rdquo; in English. Removing stop words are a common step in text processing. However, it has been demonstrated in recent years that the removal of stop words is not a necessary step and may have undesirable effect on the classifier. In fact, our preliminary experiment deprecated such action as the testing accuracy decreased by 2%.</p>
+
+<h3 id="stem">Stem</h3>
+
+<p>In linguistics, a stem is a part of a word. Different words can be derivative of the same stem. For example, the word &ldquo;interest&rdquo; is the stem of both &ldquo;interesting&rdquo; and &ldquo;interested&rdquo;.
+Consequently, stemming refers to the procedure of replace every word by its stem. However, our considerations is that tweets are very short so we choose not to perform stemming since we want to reserve as many features as possible. Nevertheless, we do think it is a necessary step to do in the case of long documents in order to reduce the features and improve classification performance.</p>
+
+<h3 id="bag-of-words-model">Bag of Words Model</h3>
+
+<p>The bag-of-words model is a simplifying representation used in natural language processing. In this model, a text is represented as the collection of its words, disregarding grammar and even word order but keeping multiplicity. One can also consider bag of bigram and trigram tokens as it can retain some local information in the text. It is also worth pointing out it is better to use pointwise mutual information (PMI) to select those N-gram patterns that are more likely to occur together. But we abstained from doing so as it is too computational expensive.</p>
+
+<h3 id="tf-idf-transformation">Tf Idf Transformation</h3>
+
+<p>After bag-of-words tokenization, each text ends up to be a set of words with corresponding counts. The simple counts representation has such a disadvantage that the longer document tends to have larger counts for some words. In order to fix this, it is better to divide the counts by the size of the document, then the counts become term frequency (tf). Another consideration is inverse document-frequency (idf). In a large text corpus, some words will be very present (e.g. &ldquo;the&rdquo;, &ldquo;a&rdquo;, &ldquo;is&rdquo; in English) hence carrying very little meaningful information about the actual contents of the document. The idf is defined as $$idf(t) = \log{\frac{n_d}{1+df(d, t)}}$$, where the \(n_d\) is the total number of documents, and \(df(d,t)\) is the number of documents that contain term t and &ldquo;1&rdquo; is just the smoothing term. Therefore, idf will make the rarer words more informative for certain type of documents. Then the tf-idf is just the product of the two components. We decided to use idf since it had improvement over the logistic regression unigram model.</p>
+
+<h3 id="annotation">Annotation</h3>
+
+<p>There are several famous lexicons online that contain sentiment words chosen by linguists. The one we chose is called AFINN list, including 2477 words, each of which also has a sentiment score on a scale of -5 to 5 (from negative to positive). We matched each word in all the tweets message and computed the sum of sentiment score for each text. It turned out the logistic regression could achieve 61.14% prediction accuracy based on this single attribute. Afterwards, we appended attribute to the unigram bag-of-word matrix we obtained before and used logistic regression to retrain the model. The prediction accuracy on test is 81.96%, improving the logistic regression baseline slightly by 1%. However, the computation became more time consuming later on expecially for SVM and we thought the reason might be that the new attribute somehow destructed the sparsity of data matrix. Finally, we determined to ignore this attribute since it had disadvantage in computation capacity and only had small improvement.</p>
+
+<h3 id="machine-learning-models">Machine Learning Models</h3>
+
+<h4 id="naive-bayes">Naive Bayes</h4>
+
+<p>Naive Bayes is a generative model that makes the bag of words assumption (position doesn’t matter) and the conditional independence assumption (words are conditionally independent of each other given the class). The high bias and low variance model is a very common baseline and can do surprisingly well for small data sets.</p>
+
+<h4 id="logistic-regression">Logistic Regression</h4>
+
+<p>Logistic regression, also called maximum entropy model, is a discriminative model with good computational performance for large linearly seperated data sets.</p>
+
+<h4 id="svm">SVM</h4>
+
+<p>Support vector machines (SVMs) are supervised learning models that can have very high performance in high dimensional spaces, therefore it can be very effective in text classification.</p>
+
+<h2 id="result">Result</h2>
+
+<p><html>
+<head>
+<style>
+table, th, td {
+    border: 2px solid black;
+    width: 45%;
+    padding: 15px;
+    text-align: left;
+}
+</style>
+</head></p>
+
+<p>Accuracy Report:</p>
+
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Feature</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>MultiNB</td>
+<td>N/A</td>
+<td>78.15%</td>
+</tr>
+
+<tr>
+<td>Logistic</td>
+<td>N/A</td>
+<td>80.22%</td>
+</tr>
+
+<tr>
+<td>SVM</td>
+<td>N/A</td>
+<td>80.71%</td>
+</tr>
+
+<tr>
+<td>MultiNB</td>
+<td>Negation</td>
+<td>78.66%</td>
+</tr>
+
+<tr>
+<td>MultiNB</td>
+<td>stopwords</td>
+<td>76.68%</td>
+</tr>
+
+<tr>
+<td>Logistic</td>
+<td>Ngram(1-3)</td>
+<td>82.08%</td>
+</tr>
+
+<tr>
+<td>SVM</td>
+<td>Ngram(1-3)</td>
+<td>84.62%</td>
+</tr>
+</tbody>
+</table>
+
+<p>SVM Report:</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Precision</th>
+<th>Recall</th>
+<th>F1 score</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>0.83</td>
+<td>0.86</td>
+<td>0.85</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>0.86</td>
+<td>0.83</td>
+<td>0.84</td>
+</tr>
+</tbody>
+</table>
+
+<p>ROC Curve:</p>
+
+<p><img src="../../../projects/sentiment/output_51_0.png" alt="png" /></p>
+
+<p>From the tables above we can easily find that SVM and Logistic Regression are both better than Naive Bayes and they perform almost the same for our dataset. This is obviously true because the high bias low variance classifiers like Naive Bayes work well only in small dataset(&lt; 10000).</p>
+
+<p>When introducing some feature engineering process such as emoji changing and negation, the accuracy remains almost the same and removing stop words even cause the accuracy decreasing by 2%. It tells us that stop words are informative especially in short text like tweets.</p>
+
+<p>Mixing unigram with bigram and trigram seems to a significant improvement for logistic(2%) and SVM(4%). Here we discard Navie Beyes since it is not proper for our data based on early discussions.</p>
+
+<h2 id="summary-and-future">Summary and Future</h2>
+
+<p>The best combination of algorithm and feature engineering method is SVM + Mixed Ngram. SVM with linear kernal is good both on binary text classification and computational performance while bag of single word analysis is not informative enough.</p>
+
+<p>In the future, we are going to perform multinomial classification such as positive, neutral and negative and also train different models for different topic.</p>
+
+<h2 id="a-small-sample-of-code">A Small Sample of Code</h2>
+
+<pre><code class="language-python">import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfTransformer, TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC, LinearSVC
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import GridSearchCV
+from nltk.corpus import stopwords
+import nltk
+import re
+from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import classification_report
+import matplotlib.pyplot as plt
+</code></pre>
+
+<p>Randomly select about 25% of original dataset and split it into training(80%) and test(20%).</p>
+
+<pre><code class="language-python">whole_data = pd.read_csv('Sentiment Analysis Dataset.csv', header=0, error_bad_lines=False)
+</code></pre>
+
+<pre><code>b'Skipping line 8836: expected 4 fields, saw 5\n'
+b'Skipping line 535882: expected 4 fields, saw 7\n'
+</code></pre>
+
+<pre><code class="language-python">whole_data.shape
+</code></pre>
+
+<pre><code>(1578612, 4)
+</code></pre>
+
+<pre><code class="language-python">idx = np.random.randint(0,1578612,400000)
+reduce_data = whole_data.loc[idx]
+data_train, data_test = train_test_split(reduce_data, test_size = 0.2)
+train = data_train[['Sentiment', 'SentimentText']].reset_index().drop('index', axis=1)
+test = data_test[['Sentiment', 'SentimentText']].reset_index().drop('index', axis=1)
+</code></pre>
+
+<pre><code class="language-python">test.head()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Sentiment</th>
+      <th>SentimentText</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>One of my best friends gave birth 2 weeks ago ...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>@Diana_Rosalien haha HELLO! i'm home! and i go...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>@jamie_oliver had a nice weekend, didnt do muc...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>@Adman500 Haha, thankyou very much</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>@denifty I'm really sorry. I thought updates w...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">train['Sentiment'].sum()
+</code></pre>
+
+<pre><code>160378
+</code></pre>
+
+<pre><code class="language-python">train.to_csv('train.csv')
+test.to_csv('test.csv')
+</code></pre>
+
+<p>Vectorization on each twiiter shorttext.</p>
+
+<pre><code class="language-python">def feature_transform(sent):
+    out = sent
+    
+    # feature set: emoji, hashtag, url(hyperlink), &quot;I’m in a hurrryyyyy&quot;
+    feature_set = {r':-\)|:\)|\(:|\(-:': 'smile', \
+                r':-D|:D|X-D|XD|xD': 'laugh', \
+                r'&lt;3|:\*': 'kiss', \
+                r';-\)|;\)|;-D|;D|\(;|\(-;': 'wink', \
+                r':-\(|:\(|\(:|\(-:': 'frown', \
+                r':,\(|:\'\(|:&quot;\(|:\(\(': 'cry',\
+                r'#(\w+)': r'HASH_\1', \
+                r'(http|https|ftp)://[a-zA-Z0-9\\./]+': 'URL', \
+                r'(.)\1{1,}': r'\1\1'}
+    
+    for key, value in feature_set.items():
+        #print(key, value)
+        out = re.sub(key, value, out)
+        
+    return out
+</code></pre>
+
+<pre><code class="language-python">test.ix[4,'SentimentText']
+</code></pre>
+
+<pre><code>&quot;@denifty I'm really sorry. I thought updates were free for touch users too &quot;
+</code></pre>
+
+<p>MultiNB</p>
+
+<pre><code class="language-python">test = pd.read_csv('test.csv', header = 0)
+y_test = test.Sentiment
+X_test = test.SentimentText
+</code></pre>
+
+<pre><code class="language-python">train = pd.read_csv('train.csv', header = 0)
+y = train.Sentiment
+X = train.SentimentText
+</code></pre>
+
+<pre><code class="language-python">text_clf = Pipeline([('vect', CountVectorizer()), \
+                     ('tfidf', TfidfTransformer()), \
+                     ('clf', MultinomialNB())])
+
+text_clf.fit(X,y)
+</code></pre>
+
+<pre><code>Pipeline(steps=[('vect', CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words=None,
+        strip...inear_tf=False, use_idf=True)), ('clf', MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True))])
+</code></pre>
+
+<pre><code class="language-python">pred = text_clf.predict(X_test)
+acc_NB = np.mean(pred == y_test)
+acc_NB
+</code></pre>
+
+<pre><code>0.78158749999999999
+</code></pre>
+
+<p>Logistic</p>
+
+<pre><code class="language-python">text_clf = Pipeline([('vect', CountVectorizer()), \
+                     ('tfidf', TfidfTransformer()), \
+                     ('clf', LogisticRegression())])
+
+text_clf.fit(X,y)
+</code></pre>
+
+<pre><code>Pipeline(steps=[('vect', CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words=None,
+        strip...ty='l2', random_state=None, solver='liblinear', tol=0.0001,
+          verbose=0, warm_start=False))])
+</code></pre>
+
+<pre><code class="language-python">pred = text_clf.predict(X_test)
+logit_NB = np.mean(pred == y_test)
+logit_NB
+</code></pre>
+
+<pre><code>0.8021625
+</code></pre>
+
+<p>logistic with Ngram</p>
+
+<pre><code class="language-python">text_clf = Pipeline([('vect', CountVectorizer(ngram_range=(1,3))), \
+                     ('tfidf', TfidfTransformer()), \
+                     ('clf', LogisticRegression())])
+
+text_clf.fit(X,y)
+</code></pre>
+
+<pre><code>Pipeline(steps=[('vect', CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 3), preprocessor=None, stop_words=None,
+        strip...ty='l2', random_state=None, solver='liblinear', tol=0.0001,
+          verbose=0, warm_start=False))])
+</code></pre>
+
+<pre><code class="language-python">pred = text_clf.predict(X_test)
+logit_NB_ngram = np.mean(pred == y_test)
+logit_NB_ngram
+</code></pre>
+
+<pre><code>0.82082500000000003
+</code></pre>
+
+<p>SVM</p>
+
+<pre><code class="language-python">text_clf = Pipeline([('vect', CountVectorizer(ngram_range=(1,3))), \
+                     ('tfidf', TfidfTransformer()), \
+                     ('clf', LinearSVC())])
+
+text_clf.fit(X,y)
+</code></pre>
+
+<pre><code>Pipeline(steps=[('vect', CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 3), preprocessor=None, stop_words=None,
+        strip...ax_iter=1000,
+     multi_class='ovr', penalty='l2', random_state=None, tol=0.0001,
+     verbose=0))])
+</code></pre>
+
+<pre><code class="language-python">pred_svm = text_clf.predict(X_test)
+svm_ngram = np.mean(pred == y_test)
+svm_ngram
+</code></pre>
+
+<pre><code>0.84617500000000001
+</code></pre>
+
+<p>Hypeparameter tuning</p>
+
+<pre><code class="language-python">parameters = {'clf__C':(0.01,0.1,1,10)}
+</code></pre>
+
+<pre><code class="language-python">%%time
+gs_clf = GridSearchCV(text_clf, parameters, n_jobs=-1, cv=2)
+gs_clf_result= gs_clf.fit(X[:100000],y[:100000])
+</code></pre>
+
+<pre><code>CPU times: user 16.2 s, sys: 941 ms, total: 17.2 s
+Wall time: 1min 12s
+</code></pre>
+
+<pre><code class="language-python">%%time 
+clf = text_clf
+clf.fit(X, y)
+</code></pre>
+
+<pre><code>CPU times: user 53.5 s, sys: 3.17 s, total: 56.6 s
+Wall time: 57.7 s
+</code></pre>
+
+<pre><code class="language-python">gs_clf_result.best_score_
+gs_clf_result.best_params_
+</code></pre>
+
+<pre><code>{'clf__C': 1}
+</code></pre>
+
+<p>SVM Classification report</p>
+
+<pre><code class="language-python">print(classification_report(y_test,pred_svm))
+</code></pre>
+
+<pre><code>             precision    recall  f1-score   support
+
+          0       0.83      0.86      0.85     39962
+          1       0.86      0.83      0.84     40038
+
+avg / total       0.85      0.85      0.85     80000
+</code></pre>
+
+<p>ROC Curve</p>
+
+<pre><code class="language-python">text_clf = Pipeline([('vect', CountVectorizer()), \
+                     ('tfidf', TfidfTransformer()), \
+                     ('clf', MultinomialNB())])
+
+text_clf.fit(X,y)
+</code></pre>
+
+<pre><code>Pipeline(steps=[('vect', CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words=None,
+        strip...inear_tf=False, use_idf=True)), ('clf', MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True))])
+</code></pre>
+
+<pre><code class="language-python">Y_test_prob = text_clf.predict_proba(X_test)[:,1]
+fpr_nb, tpr_nb, thresholds_nb =roc_curve(y_test,Y_test_prob)
+</code></pre>
+
+<pre><code class="language-python">text_clf = Pipeline([('vect', CountVectorizer()), \
+                     ('tfidf', TfidfTransformer()), \
+                     ('clf', LogisticRegression())])
+
+text_clf.fit(X,y)
+</code></pre>
+
+<pre><code>Pipeline(steps=[('vect', CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words=None,
+        strip...ty='l2', random_state=None, solver='liblinear', tol=0.0001,
+          verbose=0, warm_start=False))])
+</code></pre>
+
+<pre><code class="language-python">Y_logit_prob = text_clf.predict_proba(X_test)[:,1]
+fpr_logit, tpr_logit, thresholds_logit =roc_curve(y_test,Y_logit_prob)
+</code></pre>
+
+<pre><code class="language-python">text_clf = Pipeline([('vect', CountVectorizer(ngram_range=(1,3))), \
+                     ('tfidf', TfidfTransformer()), \
+                     ('clf', LogisticRegression())])
+
+text_clf.fit(X,y)
+</code></pre>
+
+<pre><code>Pipeline(steps=[('vect', CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+        lowercase=True, max_df=1.0, max_features=None, min_df=1,
+        ngram_range=(1, 3), preprocessor=None, stop_words=None,
+        strip...ty='l2', random_state=None, solver='liblinear', tol=0.0001,
+          verbose=0, warm_start=False))])
+</code></pre>
+
+<pre><code class="language-python">Y_logit_ngram_prob = text_clf.predict_proba(X_test)[:,1]
+fpr_logit_ngram, tpr_logit_ngram, thresholds_logit_ngram =roc_curve(y_test,Y_logit_ngram_prob)
+</code></pre>
+
+<pre><code class="language-python">plt.plot(fpr_nb, tpr_nb, label='NB')
+plt.plot(fpr_logit, tpr_logit, label='logit')
+plt.plot(fpr_logit_ngram, tpr_logit_ngram, label='logit_ngram')
+plt.plot([0, 1], [0, 1], '--', label='random decision')
+plt.xlabel('Fail positive rate')
+plt.ylabel('True positive rate')
+plt.legend(loc=4)
+plt.show()
+</code></pre>
+
+<pre><code class="language-python">auc(fpr_logit,tpr_logit)
+</code></pre>
+
+<pre><code>0.86817554821593235
+</code></pre>
+      
+       </div>
+     </div>
+   </div>
+
+
+
+
+
+        <a href="#" class="back-to-top">
+        <i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i>
+
+        </a>
+
+         <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'yyx';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+   
+
+          </div>
+      </div>
+  </div>
+  <script src="../../../js/jquery.min.js"></script>
+<script src="../../../js/bootstrap.min.js"></script>
+<script src="../../../js/jquery.cookie.js"> </script>
+<script src="../../../js/ekko-lightbox.js"></script>
+<script src="../../../js/jquery.scrollTo.min.js"></script>
+<script src="../../../js/masonry.pkgd.min.js"></script>
+<script src="../../../js/imagesloaded.pkgd.min.js"></script>
+<script src="../../../js/owl.carousel.min.js"></script>
+<script src="../../../js/front.js"></script>
+<script src="../../../js/backtotop.js"></script> 
+
+</body>
+</html>
