@@ -13,7 +13,7 @@ googleAnalytics = "UA-93971472-1"
   # Style options: default (pink), blue, green, pink, red, sea, violet
   # Use custom.css for your custom styling
   style = "default"
-  description = "Describe your website"
+  description = "This is a data science portfolio of Yingxi, you can find some of my data science related projects and blogs here."
   copyright = "&copy;2017 Yingxi Yu, credit to vincentz"
   sidebarAbout = [
     "I am a graduate student at UC Davis. This site is home to my data science project and blogs",
